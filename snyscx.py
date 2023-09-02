@@ -4,16 +4,19 @@ corn：10 10 * * *
 new Env('所有女生查询');
 '''
 import requests
+import os
 
+#环境变量
 env_name = 'syns_data'
 env = os.getenv(env_name)
 
+#函数
 def get_data():
     url = 'https://7.wawo.cc/api/item/wx/launch/mall/un/page'
     headers = {
         'Host': '7.wawo.cc',
         'Connection': 'keep-alive',
-        'Authorization': 'env',
+        'Authorization': env,
         'Content-Type': 'application/json',
         'Accept-Encoding': 'gzip,compress,br,deflate',
         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.40(0x18002831) NetType/WIFI Language/zh_CN',
