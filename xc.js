@@ -83,7 +83,7 @@ let msg = '';
 			headers: {   
 			'Host': 'vip.heytea.com',
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...',
+    'Authorization': `Bearer ${data[0]}`,
     'X-client': 'weapp'
 			},
 			// body: '',       // 这是一个 get 请求，没有请求体 body   如果是 post 不要忘记他鸭！
