@@ -1,18 +1,17 @@
 """ 
 time：2023.4.26 
- cron: 0 9,18 * * * 
- new Env('好奇车生活签到'); 
- 微信小程序-好奇车生活-好物兑换 
- 抓包域名: https://channel.cheryfs.cn/ 
- 抓包请求头里面: accountId 的值 
- 环境变量名称：hqcshck = accountId 的值 
- 多账号新建变量或者用 & 分开 
+cron: 0 9,18 * * * 
+new Env('好奇车生活签到'); 
+微信小程序-好奇车生活-好物兑换 
+抓包域名: https://channel.cheryfs.cn/ 
+抓包请求头里面: accountId 的值 
+环境变量名称：hqcshck = accountId 的值 
+多账号新建变量或者用 & 分开 
+""" 
   
- """ 
-  
- import time 
- import requests 
- from os import environ, path 
+import time 
+import requests 
+from os import environ, path 
   
   
  def load_send(): 
