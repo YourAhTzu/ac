@@ -6,7 +6,7 @@ cookies格式 url#cookie#argus#ladon
 wkllq_ck = "url#cookie#argus#ladon"
 7.3 悟空浏览器刷视频，不黑一天4块左右
 暂时未写异常处理,bug提交 https://t.me/jiangyutck
-
+9.6 增加变量提交
 """
 
 import datetime
@@ -18,7 +18,8 @@ import requests
 import json
 
 
-cookies= ""
+env_name = 'wk' 
+cookies = os.getenv(env_name)
 
 ua = ""
 
