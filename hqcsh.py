@@ -1,5 +1,5 @@
-"""
-
+""
+​
 time：2023.4.26
 cron: 0 9,18 * * *
 new Env('好奇车生活签到');
@@ -8,162 +8,158 @@ new Env('好奇车生活签到');
 抓包请求头里面: accountId 的值
 环境变量名称：hqcshck = accountId 的值
 多账号新建变量或者用 & 分开
-
+​底部已更新concurrency并发次数自行更改
 """
-
-import time
+import os
 import requests
-from os import environ, path
+import time
+import json
+import threading
 
 
-def load_send():
-    global send
-    cur_path = path.abspath(path.dirname(__file__))
-    if path.exists(cur_path + "/SendNotify.py"):
-        try:
-            from SendNotify import send
-            print("加载通知服务成功！")
-        except:
-            send = False
-            print(
-                '''加载通知服务失败~\n请使用以下拉库地址\nql repo https://github.com/Bidepanlong/ql.git "bd_" "README" "SendNotify"''')
-    else:
-        send = False
-        print(
-            '''加载通知服务失败~\n请使用以下拉库地址\nql repo https://github.com/Bidepanlong/ql.git "bd_" "README" "SendNotify"''')
-
-
-load_send()
-
-
-def get_environ(key, default="", output=True):
-    def no_read():
-        if output:
-            print(f"未填写环境变量 {key} 请添加")
-            exit(0)
-        return default
-
-    return environ.get(key) if environ.get(key) else no_read()
-
-
-class Hqcsh():
+class Hqcsh:
     def __init__(self, ck):
-        self.msg = ''
+        self.session = requests.Session()
         self.ck = ck
-        self.ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF XWEB/6763'
-        self.tid = '619669306447261696'
-
+        self.base_url = "https://tk3q5wwu74.execute-api.us-east-1.amazonaws.com"
+        self.user_info = None
+        
+        # 加载内置请求头和 cookie
+        self.headers = {
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/58.0.3029.110 Safari/537.36 ",
+            "cookie": f"token={self.ck}"
+        }
+    
     def sign(self):
-        time.sleep(0.5)
-        sign_url = "https://channel.cheryfs.cn/archer/activity-api/signinact/signin"
-        jf_url = 'https://channel.cheryfs.cn/archer/activity-api/common/accountPointLeft?pointId=620415610219683840'
-        q_url = 'https://channel.cheryfs.cn/archer/activity-api/pointsmall/exchangeCard?pointsMallCardId=' + qiang + '&exchangeCount=1&mallOrderInputVoStr=%7B%22person%22:%22%22,%22phone%22:%22%22,%22province%22:%22%22,%22city%22:%22%22,%22area%22:%22%22,%22address%22:%22%22,%22remark%22:%22%22%7D&channel=1&exchangeType=0&exchangeNeedPoints=188&exchangeNeedMoney=0&cardGoodsItemIds='
-        sign_headers = {
-            'User-Agent': self.ua,
-            'tenantId': self.tid,
-            'activityId': '620810406813786113',
-            'accountId': self.ck,
-        }
-
-        jf_headers = {
-            'User-Agent': self.ua,
-            'tenantId': self.tid,
-            'activityId': '621911913692942337',
-            'accountId': self.ck,
-        }
-        q_headers = {
-            'User-Agent': self.ua,
-            'tenantId': self.tid,
-            'activityId': '621950054462152705',
-            'accountId': self.ck,
-        }
-        try:
-            sign_rsp = requests.get(sign_url, headers=sign_headers)
-            time.sleep(0.5)
-            jf_rsp = requests.get(jf_url, headers=jf_headers)
-            time.sleep(0.5)
-            q_rsp = requests.get(q_url, headers=q_headers)
-
-            if sign_rsp.json()['success'] == True:
-                if sign_rsp.json()['result']['success'] == True:
-                    if q_rsp.json()['success'] == False:
-                        xx = f"[登录]：账号{a}登录成功\n[签到]：签到成功\n[积分]：{jf_rsp.json()['result']}\n[抢包]：当前不在抢包时间段，请在18-22点运行\n\n"
-                        print(xx)
-                        self.msg += xx
-                    elif q_rsp.json()['result']['success'] == True:
-                        time.sleep(0.5)
-                        qr_url = 'https://channel.cheryfs.cn/archer/activity-api/pointsmall/exchangeCardResult?resultKey=' + \
-                                 q_rsp.json()['result']['id']
-                        qr_rsp = requests.get(qr_url, headers=q_headers)
-                        if qr_rsp.json()['result']['errMsg'] == '成功':
-                            xx = f"[登录]：账号{a}登录成功\n[签到]：签到成功\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{qr_rsp.json()['result']['errMsg']}，前往个人中心-我的礼包查看！\n\n"
-                            print(xx)
-                            self.msg += xx
-                        else:
-                            xx = f"[登录]：账号{a}登录成功\n[签到]：签到成功\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{qr_rsp.json()['result']['errMsg']}\n\n"
-                            print(xx)
-                            self.msg += xx
-                    elif q_rsp.json()['result']['success'] == False:
-                        xx = f"[登录]：账号{a}登录成功\n[签到]：签到成功\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{q_rsp.json()['result']['errMsg']}\n\n"
-                        print(xx)
-                        self.msg += xx
-                elif sign_rsp.json()['result']['success'] == False:
-                    if q_rsp.json()['success'] == False:
-                        xx = f"[登录]：账号{a}登录成功\n[签到]：{sign_rsp.json()['result']['message']}\n[积分]：{jf_rsp.json()['result']}\n[抢包]：当前不在抢包时间段，请在18-22点运行\n\n"
-                        print(xx)
-                        self.msg += xx
-                    elif q_rsp.json()['result']['success'] == True:
-                        time.sleep(0.5)
-                        qr_url = 'https://channel.cheryfs.cn/archer/activity-api/pointsmall/exchangeCardResult?resultKey=' + \
-                                 q_rsp.json()['result']['id']
-                        qr_rsp = requests.get(qr_url, headers=q_headers)
-                        if qr_rsp.json()['result']['errMsg'] == '成功':
-                            xx = f"[登录]：账号{a}登录成功\n[签到]：{sign_rsp.json()['result']['message']}\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{qr_rsp.json()['result']['errMsg']}，前往个人中心-我的礼包查看！\n\n"
-                            print(xx)
-                            self.msg += xx
-                        else:
-                            xx = f"[登录]：账号{a}登录成功\n[签到]：{sign_rsp.json()['result']['message']}\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{qr_rsp.json()['result']['errMsg']}\n\n"
-                            print(xx)
-                            self.msg += xx
-                    elif q_rsp.json()['result']['success'] == False:
-                        xx = f"[登录]：账号{a}登录成功\n[签到]：{sign_rsp.json()['result']['message']}\n[积分]：{jf_rsp.json()['result']}\n[抢包]：{q_rsp.json()['result']['errMsg']}\n\n"
-                        print(xx)
-                        self.msg += xx
-            elif sign_rsp.json()['success'] == False:
-                xx = f"[登录]：账号{a}登录失败，请稍后重试或者ck可能失效,当前ck：{self.ck}\n\n"
-                print(xx)
-                self.msg += xx
+        url = f"{self.base_url}/prod/sign"
+        resp = self.session.post(url, headers=self.headers)
+        
+        msg = ''
+        if resp.status_code == 200:
+            res_json = json.loads(resp.content.decode('utf-8'))
+            if res_json['status'] == "success":
+                self.user_info = res_json["data"]["user_info"]
+                today_sign_days = self.user_info.get("today_sign_days")
+                total_sign_days = self.user_info.get("total_sign_days")
+                
+                msg += f"今天签到成功，已连续签到 {today_sign_days} 天，累计签到 {total_sign_days} 天\n"
             else:
-                xx = f"[登录]：账号{a}登录失败，请稍后重试或者ck可能失效,当前ck：{self.ck}\n\n"
-                print(xx)
-                self.msg += xx
-                return self.msg
-            return self.msg
-        except Exception as e:
-            xx = f"[请求异常]：稍后再试\n{e}\n\n"
-            print(xx)
-            self.msg += xx
-            return self.msg
+                msg += f"签到失败，信息：{res_json}\n"
+        else:
+            resp.raise_for_status()
+            
+        return msg
+    
+    def qiang(self, qiang):
+        self.headers["Referer"] = "https://www.haoqiche.com/"
+        url = f"{self.base_url}/prod/gift"
+        data = {"gift_id": qiang}
+        resp = self.session.post(url, json=data, headers=self.headers)
+        
+        result = None
+        if resp.status_code == 200:
+            res_json = json.loads(resp.content.decode('utf-8'))
+            if res_json['status'] == "success":
+                gift_name = res_json["data"]["gift_info"]["name"]
+                result = f"恭喜，您抢到了【{gift_name}】的礼包！"
+            else:
+                err_msg = res_json.get("msg")
+                if err_msg == '积分不足':
+                    result = "抢包失败，积分不足"
+                else:
+                    result = f"抢包失败，信息：{res_json}"
+        else:
+            resp.raise_for_status()
+            
+        return result
 
-    def get_sign_msg(self):
-        return self.sign()
+
+def get_environ(key):
+    try:
+        with open(".env.json", encoding="utf-8") as f:
+            env = json.load(f)
+        return env[key]
+    except Exception as e:
+        print(f"获取环境变量 {key} 失败:", e)
+        return ""
 
 
-if __name__ == '__main__':
+def send(title, content):
+    sckey = get_environ("sckey")
+    if not sckey:
+        print("没有配置 Server 酱，无法推送消息")
+        return
+
+    url = f"https://sc.ftqq.com/{sckey}.send"
+    data = {
+        "text": title,
+        "desp": content
+    }
+
+    try:
+        resp = requests.post(url, data=data)
+        resp_json = resp.json()
+        if resp_json["errno"] == 0:
+            print("推送成功")
+        else:
+            print(f"推送失败: {resp_json}")
+    except Exception as e:
+        print("推送消息时出错:", e)
+
+
+def run_sign(ck):
+    run = Hqcsh(ck)
+    return run.sign()
+
+
+def run_qiang(ck, qiang):
+    run = Hqcsh(ck)
+    result = run.qiang(qiang)
+    if result is not None:
+        print(f"抢包结果：{result}")
+        if send:
+            send("好奇车生活签到通知", f"抢包结果：{result}")
+
+
+def auto_run(concurrency, loop):
     q1 = '647894196522340352'  # 188积分 1.08元
     q2 = '622187839353806848'  # 288积分 1.88元
     q3 = '622187928306601984'  # 588积分 3.88元
     q4 = '622188100122075136'  # 888积分 5.88元
-    qiang = q4
-    print('\n默认设置自动抢188积分1.08元的包\n需要设置到脚本底部修改 qiang = xxx\nxxx为q1-q4对应的包\n注：抢包没有做循环，只提交一次可能会失败，可以在18点之后定时重复运行几次\n')
+    
+    qiang = q4  # 默认设置自动抢888积分5.88元的包
+    
+    print('\n默认设置自动抢888积分5.88元的包\n需要设置到脚本底部修改 qiang = xxx\nxxx为q1-q4对应的包\n')
+    
     token = get_environ("hqcshck")
     msg = ''
     cks = token.split("&")
-    print("检测到{}个ck记录\n开始Hqcsh签到\n".format(len(cks)))
-    a = 0
+    
     for ck in cks:
-        a += 1
-        run = Hqcsh(ck)
-        msg += run.get_sign_msg()
+        msg += run_sign(ck)
+    
+    success_count = 0
+    while success_count < concurrency:
+        threads = []
+        for ck in cks:
+            thread = threading.Thread(target=run_qiang, args=(ck, qiang))
+            threads.append(thread)
+            thread.start()
+        
+        for thread in threads:
+            thread.join()
+            success_count += 1
+        
+        if success_count >= concurrency:
+            break
+        
+        print("未成功抢到包，等待5秒后再次尝试...")
+        time.sleep(5)  # 未抢到包时等待5秒后继续循环
+    
     if send:
-        send("好奇车生活签到通知", msg)
+        send("好奇车生活签到通知", msg + f"\n并发抢包完成，成功抢到包的账户数量：{success_count}")
+
+
+if __name__ == '__main__':
+    auto_run(concurrency=2, loop=10)
