@@ -17,7 +17,7 @@ headers = {
 
 
 def send_video_request(video_num, renwu_id):
-    nbb = os.environ.get("nbb").split('@')
+    nbb = os.environ.get("nbb")
     if not nbb:
         print("未设置环境变量 nbb")
         return
