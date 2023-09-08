@@ -1,10 +1,10 @@
 '''
 @阿慈 仅供学习交流，请在下载后的24小时内完全删除 请勿将任何内容用于商业或非法目的，否则后果自负。
 corn：10 10 * * *
-new Env('农粑粑视频');
 '''
 import os
 import requests
+
 
 # 设置请求头信息
 headers = {
@@ -16,8 +16,8 @@ headers = {
 }
 
 
-def send_video_request(renwu_id):
-    nbb = os.environ.get("nbb")
+def send_video_request(video_num, renwu_id):
+    nbb = os.environ.get("nbb").split('@')
     if not nbb:
         print("未设置环境变量 nbb")
         return
@@ -35,17 +35,19 @@ def send_video_request(renwu_id):
         msg = response_data.get("msg")
         scoreadd = response_data.get("scoreadd")
 
+        print(f"第{video_num}个视频：")
         print(f"请求状态：{status}")
         print(f"消息：{msg}")
         print(f"积分：{scoreadd}")
+        print("==============================")
     except:
         print(f"发送视频请求失败")
 
 
 def main():
     renwu_ids = [1, 2, 3, 10]
-    for renwu_id in renwu_ids:
-        send_video_request(renwu_id)
+    for i, renwu_id in enumerate(renwu_ids, start=1):
+        send_video_request(i, renwu_id)
 
 
 if __name__ == "__main__":
