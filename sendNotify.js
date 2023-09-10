@@ -169,9 +169,9 @@
   * @param author 作者仓库等信息  例：`本脚本免费使用 By：xxxx`
   * @returns {Promise<unknown>}
   */
- async function sendNotify(text, desp, params = {TG交流群:'https://t.me/Luobook666'}, author = 'Luobook') {
+ async function sendNotify(text, desp, params = {QQ交流群:'777974608'}, author = 'ac') {
    //提供6种通知
-   desp += '\n\nTG群组：\nhttps://t.me/Luobook666\n公众号：Luobook科技社';//增加作者信息，防止被贩卖等
+   desp += '\nQQ交流群：777974608';//增加作者信息，防止被贩卖等
    await Promise.all([
      serverNotify(text, desp), //微信server酱
      pushPlusNotify(text, desp) //pushplus(推送加)
