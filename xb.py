@@ -2,6 +2,7 @@
 @阿慈 仅供学习交流，请在下载后的24小时内完全删除 请勿将任何内容用于商业或非法目的，否则后果自负。
 此接口调用小白API
 更新环境变量提交PushPlus数据环境名字tz
+new Env('线报');
 '''
 import os
 import requests
