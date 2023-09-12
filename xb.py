@@ -5,6 +5,7 @@
 new Env('线报');
 '''
 import os
+import json
 import requests
 
 def send_pushplus_notification(token, title, content, receivers):
@@ -19,10 +20,10 @@ def send_pushplus_notification(token, title, content, receivers):
     }
 
     # 发送请求
-    response = requests.post('http://www.pushplus.plus/send', data=data)
+    response = requests.post('http://www.pushplus.plus/send', json=data)
 
     # 返回结果
-    return response.text
+    return response.json()
 
 url = "https://xiaobai.klizi.cn/API/other/xb.php"
 
@@ -33,31 +34,37 @@ headers = {
     'Accept-Encoding': 'gzip, deflate, br'
 }
 
-response = requests.get(url, headers=headers)
+try:
+    with requests.get(url, headers=headers) as response:
+        response.raise_for_status()  # 检查响应是否成功
+        data = response.json()["data"]
+        time = data["Time"]
+        manner = data["manner"]
+        introduction = data["Introduction"]
+        red_packet_type = data["type"]
+        rule = data["rule"]
 
-if response.status_code == 200:
-    data = response.json()["data"]
-    time = data["Time"]
-    manner = data["manner"]
-    introduction = data["Introduction"]
-    red_packet_type = data["type"]
-    rule = data["rule"]
+        # 打印活动信息
+        print("活动时间:", time)
+        print("活动地址:", manner)
+        print("活动项目名称:", introduction)
+        print("活动类型:", red_packet_type)
+        print("活动说明:", rule)
 
-    print("活动时间:", time)
-    print("活动地址:", manner)
-    print("活动项目名称:", introduction)
-    print("活动类型:", red_packet_type)
-    print("活动说明:", rule)
+        # 发送PushPlus通知
+        token = os.environ.get('tz', '')
+        title = '【线报通知】'
+        content = f'活动时间: {time}\n活动地址: {manner}\n活动项目名称: {introduction}\n活动类型: {red_packet_type}\n活动说明: {rule}'
+        receivers = os.environ.get('RECEIVERS', '').split(',')
+        response = send_pushplus_notification(token, title, content, receivers)
+        if response.get('code') == 200:
+            print('推送通知发送成功')
+        else:
+            print('推送通知发送失败:', response.get('msg'))
 
-    
-    token = os.environ.get('tz', '')
-
-    title = '【线报通知】'
-    content = f'活动时间: {time}\n活动地址: {manner}\n活动项目名称: {introduction}\n活动类型: {red_packet_type}\n活动说明: {rule}'
-    receivers = ['User1', 'User2']  # 接收人的用户名或者用户组名称，多个接收人用逗号分隔，如：['User1', 'User2']
-
-    # 发送PushPlus通知
-    send_pushplus_notification(token, title, content, receivers)
-else:
-    print("请求失败")
-
+except requests.exceptions.RequestException as e:
+    print("网络请求异常:", e)
+except (KeyError, ValueError) as e:
+    print("JSON解析异常:", e)
+except Exception as e:
+    print("其他异常:", e)
