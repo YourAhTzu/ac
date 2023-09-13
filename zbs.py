@@ -1,13 +1,12 @@
 """
 @Qim出品 仅供学习交流，请在下载后的24小时内完全删除 请勿将任何内容用于商业或非法目的，否则后果自负。
 植白说官方商城_V1.2  签到 牛奶活动
-
 抓https://www.kozbs.com/demo/取出X-Dts-Token
-
 export zbstoken=X-Dts-Token
 多账号用'===='隔开 例 账号1====账号2
 corn：0 0 8 * * ?
 加了一个PushPlus推送
+new Env('植白说');
 """
 import os
 import requests
@@ -74,7 +73,7 @@ else:
     push_url = 'http://www.pushplus.plus/send'
     push_data = {
         'token': pushplus_token,
-        'title': f"自动签到和分享结果({num_of_accounts}个账号)",
+        'title': f"推送结果({num_of_accounts}个账号)",
         'content': result_str,
     }
 
