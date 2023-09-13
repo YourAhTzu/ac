@@ -12,7 +12,7 @@ import os
 import requests
 
 # 读取 PushPlus Token
-pushplus_token = os.environ.get('PUSHPLUS_TOKEN', '')
+pushplus_token = os.environ.get('tz', '')
 print("PushPlus Token:", pushplus_token)
 
 if not pushplus_token:
