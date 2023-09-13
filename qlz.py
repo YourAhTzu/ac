@@ -11,6 +11,8 @@ import time
 accessToken = os.getenv("qlz")
 pushPlusToken = os.getenv("tz")
 
+share_count = 0  # 已分享次数
+
 
 def signin():
     print("开始执行签到")
@@ -29,16 +31,18 @@ def signin():
         data = response.json()
         if "bonusPoints" in data:
             print(f"获得奖励积分数: {data['bonusPoints']}")
-            push_message("签到成功")
         else:
             print("已签到")
     except Exception as e:
         print(f"签到出现异常: {e}")
-        push_message("签到出现异常")
 
 
 def share():
-    print("开始执行分享")
+    global share_count
+    if share_count >= 10:  # 分享次数达到10次就不再执行
+        return
+    if share_count == 0:  # 只在第一次执行分享时打印消息
+        print("开始执行分享")
     url = "https://kapi.yili.com/qlz/api/integral/product/share?productId=0"
     headers = {
         "Host": "kapi.yili.com",
@@ -51,20 +55,15 @@ def share():
         "Referer": "https://servicewechat.com/wxa206b57027b01b51/186/page-frame.html",
     }
     try:
-        for i in range(10):
-            print(f"第 {i + 1} 次分享")
-            response = requests.get(url, headers=headers)
-            data = response.json()
-            if response.status_code == 200 and data["code"] == 200:
-                print("分享成功")
-                push_message("分享成功")
-            else:
-                print("分享失败")
-                push_message("分享失败")
-            time.sleep(5)  # 延迟五秒
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        if response.status_code == 200 and data["code"] == 200:
+            print("分享成功")
+            share_count += 1  # 已分享次数加一
+        else:
+            print("分享失败")
     except Exception as e:
         print(f"分享出现异常: {e}")
-        push_message("分享出现异常")
 
 
 def push_message(content):
@@ -85,8 +84,15 @@ def push_message(content):
 
 
 def main():
-    signin()
-    share()
+    is_signed = False
+    for i in range(10):
+        if not is_signed:
+            signin()
+            is_signed = True  # 只在第一次签到时打印信息
+        share()
+        time.sleep(5)  # 分享间隔时间为5秒
+    if share_count >= 10:
+        push_message("签到和分享任务已完成。")
 
 
 if __name__ == '__main__':
