@@ -30,7 +30,7 @@ else:
     num_of_accounts = len(accounts_list)
     print(f"获取到 {num_of_accounts} 个账号")
 
-    result_list = []  # 存储所有账号的签到和分享结果以及积分余额
+    result_list = []  # 存储所有账号的签到和分享结果
 
     # 遍历所有账号进行签到和分享任务
     for i, account in enumerate(accounts_list, start=1):
@@ -43,14 +43,13 @@ else:
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.39 (0x18002733) NetType/WIFI Language/zh_CN',
         }
         response = requests.get(url, headers=headers)
-        response.code = response.json()
-        if response.code['errno'] == 0:
-            signCount = response.code['data']['signCount']
-            integral = response.code['data']['integral']
-            print(f"签到成功----{signCount}\n积分余额----{integral}")
+        response_code = response.json()
+        if response_code.get('errno') == 0:
+            signCount = response_code['data'].get('signCount', 0)
+            print(f"签到成功----{signCount}")
 
-            # 添加当前账号的签到结果和积分余额到列表中
-            result_list.append(f"账号{i}：签到成功--{signCount}，积分余额--{integral}")
+            # 添加当前账号的签到结果到列表中
+            result_list.append(f"账号{i}：签到成功--{signCount}")
         else:
             print('请求失败')
 
@@ -58,22 +57,35 @@ else:
         for j in range(3):
             url = 'https://www.kozbs.com/demo/wx/user/addIntegralByShare'
             response = requests.get(url, headers=headers)
-            response.code = response.json()
-            if response.code['errno'] == 0:
+            response_code = response.json()
+            if response_code.get('errno') == 0:
                 print(f"第{j + 1}分享---成功")
                 # 添加当前账号的分享结果到列表中
                 result_list.append(f"账号{i}：分享{j + 1}成功")
             else:
                 print('请求失败')
 
-    # 将所有账号的签到、分享结果和积分余额的字符串以换行符连接成一个大字符串
+        # 获取积分余额
+        url = 'https://www.kozbs.com/demo/wx/home/signDay'
+        response = requests.get(url, headers=headers)
+        response_code = response.json()
+        if response_code.get('errno') == 0:
+            integral = response_code['data'].get('integral', 0)
+            print(f"积分余额为：{integral}")
+
+            # 添加当前账号的积分余额到列表中
+            result_list.append(f"账号{i}：积分余额为：{integral}")
+        else:
+            print('请求失败')
+
+    # 将所有账号的签到、分享和积分余额结果的字符串以换行符连接成一个大字符串
     result_str = '\n'.join(result_list)
 
     # 构造推送的请求参数
     push_url = 'http://www.pushplus.plus/send'
     push_data = {
         'token': pushplus_token,
-        'title': f"推送结果({num_of_accounts}个账号)",
+        'title': f"植白说",
         'content': result_str,
     }
 
