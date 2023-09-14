@@ -1,7 +1,7 @@
 '''
 @阿慈 仅供学习交流，请在下载后的24小时内完全删除 请勿将任何内容用于商业或非法目的，否则后果自负。
 此接口调用小白API
-环境名称：PUSHPLUS_TOKEN
+环境名称：tz
 new Env('线报');
 '''
 import os
@@ -26,7 +26,7 @@ def send_pushplus_notification(token, title, content, receivers):
     return response.json()
 
 # 读取 PushPlus Token
-pushplus_token = os.environ.get('PUSHPLUS_TOKEN', '')
+pushplus_token = os.environ.get('tz', '')
 print("PushPlus Token:", pushplus_token)
 
 if not pushplus_token:
