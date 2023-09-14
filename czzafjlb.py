@@ -7,26 +7,31 @@ import requests
 import json
 import os
 
-url = 'https://ucode-openapi.aax6.cn/lottery/checkIn'
-headers = {
-    'Content-Type': 'application/json',
-    'appId': 'wx888d2a452f4a2a58',
-    'Authorization': os.environ.get('czzafjlb'),
-    'serialId': '528f8472-eda1-4fcc-8efc-99d28aaf016d'
-}
+authorization = os.environ.get('czzafjlb')
 
-data = {
-    'promotionId': 1001117,
-    'promotionCode': 'CRM-QD',
-    'pointRecordRemark': '连续签到'
-}
+if authorization:
+    url = 'https://ucode-openapi.aax6.cn/lottery/checkIn'
+    headers = {
+        'Content-Type': 'application/json',
+        'appId': 'wx888d2a452f4a2a58',
+        'Authorization': authorization,
+        'serialId': '528f8472-eda1-4fcc-8efc-99d28aaf016d'
+    }
 
-response = requests.post(url, headers=headers, data=json.dumps(data))
-result = response.json()
+    data = {
+        'promotionId': 1001117,
+        'promotionCode': 'CRM-QD',
+        'pointRecordRemark': '连续签到'
+    }
 
-if response.status_code == 200:
-    name = result.get('name')
-    print(name)
-elif response.status_code == 400:
-    emsg = result.get('emsg')
-    print(emsg)
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    result = response.json()
+
+    if response.status_code == 200:
+        name = result.get('name')
+        print(name)
+    elif response.status_code == 400:
+        emsg = result.get('emsg')
+        print(emsg)
+else:
+    print("请添加环境变量名czzafjlb")
