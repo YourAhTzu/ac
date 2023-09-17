@@ -16,13 +16,8 @@ headers = {
 }
 
 
-def send_video_request(video_num, renwu_id):
-    nbb = os.environ.get("nbb")
-    if not nbb:
-        print("未设置环境变量 nbb")
-        return
-    
-    url = f"https://sc.gdzfxc.com/?s=/ApiSign/videoRenwu&aid=1&platform=wx&session_id={nbb}&pid=0"
+def send_video_request(video_num, renwu_id, session_id):
+    url = f"https://sc.gdzfxc.com/?s=/ApiSign/videoRenwu&aid=1&platform=wx&session_id={session_id}&pid=0"
     data = {
         "renwu_id": renwu_id
     }
@@ -41,13 +36,21 @@ def send_video_request(video_num, renwu_id):
         print(f"积分：{scoreadd}")
         print("==============================")
     except:
-        print(f"发送视频请求失败")
+        print(f"视频请求失败")
 
 
 def main():
+    nbb_accounts = os.environ.get("nbb")
+    if not nbb_accounts:
+        print("未设置环境变量 nbb")
+        return
+
     renwu_ids = [1, 2, 3, 10]
+    account_list = nbb_accounts.split("\n")
+    
     for i, renwu_id in enumerate(renwu_ids, start=1):
-        send_video_request(i, renwu_id)
+        if i <= len(account_list):
+            send_video_request(i, renwu_id, account_list[i-1])
 
 
 if __name__ == "__main__":
