@@ -61,28 +61,6 @@ def share():
     except Exception as e:
         print(f"分享出现异常: {e}")
 
-def lottery():
-    print("开始执行抽奖")
-    url = "https://kapi.yili.com/qlz/api/prize/turntable/draw?exParams=false&refreshTime=300"
-    headers = {
-        "Host": "kapi.yili.com",
-        "Connection": "keep-alive",
-        "accessToken": accessToken,  # 请确保accessToken已被定义并赋值
-        "content-type": "application/x-www-form-urlencoded",
-        "scene": "1089",
-        "Accept-Encoding": "gzip,compress,br,deflate",
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.41(0x1800292e) NetType/4G Language/zh_CN",
-        "Referer": "https://servicewechat.com/wxa206b57027b01b51/186/page-frame.html",
-    }
-    try:
-        response = requests.get(url, headers=headers)
-        data = response.json()
-        if response.status_code == 200 and data["code"] == 200:
-            print(f"抽奖结果: {data.get('message')}")
-        else:
-            print("抽奖失败")
-    except Exception as e:
-        print(f"抽奖出现异常: {e}")
 
 def main():
     is_signed = False
@@ -92,8 +70,6 @@ def main():
             is_signed = True  # 只在第一次签到时打印信息
         share()
         if share_count >= 10:
-            lottery()
-        time.sleep(5)  # 分享和抽奖间隔时间为5秒
 
 if __name__ == '__main__':
     main()
