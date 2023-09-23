@@ -9,8 +9,8 @@
  * 搬砖请注明来源
  */
 //===============脚本版本=================//
-let scriptVersion = "1.0.2";
-let update_data = "完成签到";
+let scriptVersion = "1.0.3";
+let update_data = "完成签到，分享";
 //=======================================//
 const $ = new Env('巧乐兹');
 const notify = $.isNode() ? require('./sendNotify') : '';
