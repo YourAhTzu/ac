@@ -9,7 +9,7 @@
  * 搬砖请注明来源
  */
 //===============脚本版本=================//
-let scriptVersion = "1.0.3";
+let scriptVersion = "1.0.4";
 let update_data = "完成签到，分享";
 //=======================================//
 const $ = new Env('巧乐兹');
@@ -62,9 +62,10 @@ let hostname = 'https://' + host;
  * @returns {Promise<boolean>}
  */
 async function start() {
+    DoubleLog(`\n================ 开始执行签到任务 ================`)
     await sign(2 * 1000);
     await $.wait(2000);
-    
+    DoubleLog(`\n================ 开始执行分享任务 ================`)
     for (let i = 0; i < 10; i++) {
         await share(2 * 1000);
         await $.wait(2000);
