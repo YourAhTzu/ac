@@ -1,7 +1,7 @@
 ''' 
 @阿慈
 垃圾毛自己玩吧
-new Env('农好优''); 
+new Env('农好优'); 
 '''
 import requests
 import time
