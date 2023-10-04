@@ -1,6 +1,7 @@
 ''' 
 @阿慈
 垃圾毛自己玩吧
+农好优下载链接麻烦走个头http://wap.nonghaoyou.cn/Public/reg/recom/271866
 new Env('农好优'); 
 '''
 import requests
