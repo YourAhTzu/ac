@@ -3,15 +3,12 @@
 垃圾毛自己玩吧
 入口：https://wx.qrurl.net/?t=231005dD57Uv
 new Env('垃圾毛'); 
-www.rroadem.cn域名内的session_id填入qtjt变量中之后URL末尾的scene填入变量scene
+www.rroadem.cn域名内的session_id末尾的scene填入变量
 '''
 import os
 import requests
 
-session_id = os.getenv('qtjt')
-scene = os.getenv('scene')
-
-url = f"https://www.rroadem.cn/?s=/ApiRewardVideoAd/givereward&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
+qtjt_data = os.getenv('qtjt').split('@')
 
 headers = {
     'content-type': 'application/json',
@@ -23,7 +20,16 @@ data = {
     "hid": "30"
 }
 
-response = requests.post(url, headers=headers, json=data)
-json_data = response.json()
-
-print(json_data)
+for i in range(len(qtjt_data)):
+    qtjt_params = qtjt_data[i].split('&')
+    
+    session_id = qtjt_params[0]
+    scene = qtjt_params[1]
+    
+    url = f"https://www.rroadem.cn/?s=/ApiRewardVideoAd/givereward&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
+    
+    response = requests.post(url, headers=headers, json=data)
+    json_data = response.json()
+    
+    msg = json_data.get('msg')
+    print(f"第{i+1}个号运行结果：{msg}")
