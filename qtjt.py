@@ -5,6 +5,7 @@
 new Env('趣推聚推'); 
 www.rroadem.cn域名内的session_id末尾的scene填入变量
 已经改变了原来的变量了多号用@隔开小数据用&格式：session_id&scene
+提现看29行
 '''
 import os
 import requests
@@ -29,8 +30,8 @@ run_task2 = False #开启提现填True
 
 for i in range(len(qtjt_data)):
     qtjt_params = qtjt_data[i].split('&')
-    session_id = qtjt_params[0]  # 获取session_id
-    scene = qtjt_params[1]  # 获取scene
+    session_id = qtjt_params[0]  
+    scene = qtjt_params[1]  
 
     
     url_task1 = f"https://www.rroadem.cn/?s=/ApiRewardVideoAd/givereward&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
@@ -39,7 +40,7 @@ for i in range(len(qtjt_data)):
     response_task1 = requests.post(url_task1, headers=headers, json=request_data)
     json_data_task1 = response_task1.json()
     msg_task1 = json_data_task1.get('msg')
-    print(f"第{i+1}个号运行结果(任务1)：{msg_task1}")
+    print(f"第{i+1}个号运行结果：{msg_task1}")
 
     if run_task2:
         
