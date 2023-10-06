@@ -2,8 +2,9 @@
 @阿慈
 垃圾毛自己玩吧
 入口：https://wx.qrurl.net/?t=231005dD57Uv
-new Env('垃圾毛'); 
+new Env('趣推聚推'); 
 www.rroadem.cn域名内的session_id末尾的scene填入变量
+已经改变了原来的变量了多号用@隔开小数据用&格式：session_id&scene
 '''
 import os
 import requests
