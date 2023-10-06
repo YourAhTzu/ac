@@ -9,7 +9,9 @@ www.rroadem.cn域名内的session_id末尾的scene填入变量
 import os
 import requests
 
+
 qtjt_data = os.getenv('qtjt').split('@')
+
 
 headers = {
     'content-type': 'application/json',
@@ -17,20 +19,40 @@ headers = {
     'Referer': 'https://servicewechat.com/wxf2b0ee8ed60663b4/6/page-frame.html'
 }
 
-data = {
+
+request_data = {
     "hid": "30"
 }
 
+
+run_task2 = False #开启提现填True
+
 for i in range(len(qtjt_data)):
     qtjt_params = qtjt_data[i].split('&')
+    session_id = qtjt_params[0]  # 获取session_id
+    scene = qtjt_params[1]  # 获取scene
+
     
-    session_id = qtjt_params[0]
-    scene = qtjt_params[1]
+    url_task1 = f"https://www.rroadem.cn/?s=/ApiRewardVideoAd/givereward&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
     
-    url = f"https://www.rroadem.cn/?s=/ApiRewardVideoAd/givereward&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
     
-    response = requests.post(url, headers=headers, json=data)
-    json_data = response.json()
+    response_task1 = requests.post(url_task1, headers=headers, json=request_data)
+    json_data_task1 = response_task1.json()
+    msg_task1 = json_data_task1.get('msg')
+    print(f"第{i+1}个号运行结果(任务1)：{msg_task1}")
+
+    if run_task2:
+        
+        url_task2 = f"https://www.rroadem.cn/?s=/ApiMy/withdraw&aid=3&platform=wx&session_id={session_id}&pid=0&scene={scene}"
     
-    msg = json_data.get('msg')
-    print(f"第{i+1}个号运行结果：{msg}")
+        
+        request_data_task2 = {
+            "money" : 0.1,
+            "paytype" : "微信钱包"
+        }
+        
+       
+        response_task2 = requests.post(url_task2, headers=headers, json=request_data_task2)
+        json_data_task2 = response_task2.json()
+        msg_task2 = json_data_task2.get('msg')
+        print(f"第{i+1}个号运行结果：{msg_task2}")
