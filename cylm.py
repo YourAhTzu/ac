@@ -29,7 +29,7 @@ for task_id in range(8960, 8964):
         msg = result.get('msg', '')
         print(f'签到结果: {msg}')
     else:
-        print(f'Error processing Task ID {task_id}. Status code: {response.status_code}')
+        print(f'签到结果: {msg}')
         
     delay = random.randint(15, 20)
     time.sleep(delay)
