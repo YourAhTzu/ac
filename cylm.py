@@ -10,8 +10,10 @@ import time
 env_name = 'cylm'
 env = os.getenv(env_name)
 
-url = 'http://52.yyyy.run/api/sign/signTimeEnd'
-headers = {
+print("==========开始执行签到==========")
+
+url1 = 'http://52.yyyy.run/api/sign/signTimeEnd'
+headers1 = {
     'os': 'android',
     'token': env,
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -19,25 +21,27 @@ headers = {
 
 task_ids = range(8960, 8964)
 
-with requests.Session() as session:
-    session.headers.update(headers)
+with requests.Session() as session1:
+    session1.headers.update(headers1)
     for task_id in task_ids:
         data = {
             'task_id': str(task_id)
         }
-        response = session.post(url, data=data)
+        response = session1.post(url1, data=data)
         print(f"ID: {task_id}，运行返回：{response.text}")
-        time.sleep(15) 
-    
-    
-url = 'http://52.yyyy.run/api/user/postWith'
-data = {'num': '1'}
-headers['Referer'] = 'http://52.yyyy.run/pages/user/myWithdrawal.html'
-headers['Origin'] = 'http://52.yyyy.run'
+        time.sleep(15)      
+print("==========开始执行提现============")  
+url2 = 'http://52.yyyy.run/api/user/postWith'
+data2 = {'num': '1'}
+headers2 = {
+    'Referer': 'http://52.yyyy.run/pages/user/myWithdrawal.html',
+    'Origin': 'http://52.yyyy.run',
+}
+headers2.update(headers1)
 
-with requests.Session() as session:
-    session.headers.update(headers)
-    response = session.post(url, data=data)
+with requests.Session() as session2:
+    session2.headers.update(headers2)
+    response = session2.post(url2, data=data2)
     msg = response.json()['msg']
     result = f"提现结果：{msg}"
     print(result)
