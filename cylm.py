@@ -1,6 +1,6 @@
 '''
 注册链接：https://52.yyyy.run//index/wechat/login/share_id/4063
-抓token环境名字cylm
+抓token环境名字cylm（抓不到数据的用黑盒不懂的联系我:3488790026)
 new Env('创娱联盟'); 
 '''
 import requests
