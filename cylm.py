@@ -4,27 +4,26 @@
 new Env('创娱联盟'); 
 '''
 import requests
-import os
 import time
-import random
-import json
-
-env_name = 'cylm'
-env = os.getenv(env_name)
 
 url = 'http://52.yyyy.run/api/sign/signTimeEnd'
 headers = {
     'os': 'android',
+    'appid': '',
     'terminal': '2',
-    'token': env,
+    'token': '43099d8e-2529-4cb8-99a8-7d404f951ca2',
+    'user-agent': 'Mozilla/5.0 (Linux; Android 11; V2068A Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36 uni-app Html5Plus/1.0 (Immersed/29.0)',
     'Content-Type': 'application/x-www-form-urlencoded',
     'Accept-Encoding': 'gzip'
 }
-for task_id in range(8960, 8964):
-    data = {'task_id': task_id}
+
+task_ids = range(8960, 8964)
+
+for task_id in task_ids:
+    data = {
+        'task_id': str(task_id)
+    }
     response = requests.post(url, headers=headers, data=data)
-    if response.status_code == 200:
-​        result = response.json()
-        result_json = json.dumps(result, ensure_ascii=False, indent=4)
-    print(result_json)
-    delay = random.randint(15, 20)
+    # 处理响应结果
+    print(f"Task ID: {task_id}，运行返回：{response.text}")
+    time.sleep(15) 
