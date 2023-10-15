@@ -28,8 +28,6 @@ for task_id in range(8960, 8964):
         result = response.json()
         msg = result.get('msg', '')
         print(f'签到结果: {msg}')
-    else:
-        print(f'签到结果: {msg}')
         
     delay = random.randint(15, 20)
     time.sleep(delay)
