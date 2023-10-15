@@ -1,7 +1,7 @@
 '''
 注册链接：https://52.yyyy.run//index/wechat/login/share_id/4063
 抓token环境名字cylm（抓不到数据的用黑盒不懂的联系我:3488790026)
-new Env('创娱联盟'); 
+new Env('创娱联盟');（报错应该是完成任务了不要管，手动提现要去找客服激活直推0.5间接0.25要求完成签到）
 解决已知问题
 '''
 import requests
