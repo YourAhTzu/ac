@@ -9,8 +9,8 @@
  * 搬砖请注明来源
  */
 //===============脚本版本=================//
-let scriptVersion = "1.0.2";
-let update_data = "完成签到，抽奖，余额查询";
+let scriptVersion = "1.0.3";
+let update_data = "完成最大化签到，余额查询";
 //=======================================//
 const $ = new Env('聚汇社区');
 const notify = $.isNode() ? require('./sendNotify') : '';
