@@ -116,7 +116,7 @@ function sign(timeout = 2000) {
 function drawLottery(timeout = 2000) {
     return new Promise((resolve) => {
         let url = {
-            url: `${hostname}/api/subject/turntable/drawLottery`,
+            url: `${hostname}/api/subject/turntable/drawLotterys`,
             headers: {
                 'Host': host,
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -134,7 +134,7 @@ function drawLottery(timeout = 2000) {
             try {
                 let result = JSON.parse(data);
                 if (result.code == 200) {
-                    DoubleLog(`\n恭喜屌毛抽奖成功`);
+                    DoubleLog(`\n抽奖结果：${result.message}`);
                 } else {
                     DoubleLog(`\n抽奖失败:${result.message}`);
                 }
