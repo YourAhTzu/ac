@@ -1,4 +1,7 @@
 #抓Authorization填变量zhdq多号@隔开（什么时候签的到怎么定时）链接http://www.mofamoli.com/h5/reg.html?invite_code=JYWG5E
+
+new Env('智慧地球');
+
 import os
 import requests
 
