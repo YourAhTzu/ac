@@ -1,7 +1,7 @@
 '''
 注册链接：https://52.yyyy.run//index/wechat/login/share_id/4063
 抓token环境名字cylm（抓不到数据的用黑盒不懂的联系我:3488790026)
-new Env('创娱联盟');（报错应该是完成任务了不要管，手动提现要去找客服激活直推0.5间接0.25要求完成签到）
+new Env('创娱联盟');（报错应该是完成任务了不要管，手动提现要去找客服激活直推0.3间接0.15要求完成签到）
 解决已知问题
 '''
 import requests
@@ -40,7 +40,7 @@ headers3.update(headers2)
 
 with requests.Session() as session:
     session.headers.update(headers1)
-    for _ in range(3):
+    for _ in range(6):
         response = session.post(url1)
         task_id = response.json()['data']['task_id']
         print(f"获取到的task_id为：{task_id}")
