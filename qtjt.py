@@ -26,7 +26,7 @@ request_data = {
 }
 
 
-run_task2 = False #开启提现填True
+run_task2 = True #开启提现填True
 
 for i in range(len(qtjt_data)):
     qtjt_params = qtjt_data[i].split('&')
