@@ -1,10 +1,12 @@
 
 '''
 new Env('天瑞地安——共富签');
+q群：777974608（不定时开关）
 '''
 import requests
 import os
 import json
+
 
 auth_string = os.getenv('gfq')
 auth_list = auth_string.split('@')
@@ -26,11 +28,7 @@ headers = {
 
 counter = 1  
 
-for auth in auth_list:
-    if counter > 3:
-        print("想要代挂？没门")
-        break
-    
+for auth in auth_list:   
     headers['Authorization'] = auth
     
     response = requests.post(url, headers=headers)
