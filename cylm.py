@@ -4,55 +4,133 @@
 new Env('创娱联盟');（报错应该是完成任务了不要管，手动提现要去找客服激活直推0.3间接0.15要求完成签到）
 解决已知问题
 '''
-import requests
+import asyncio
 import os
-import time
+import requests
 
-env_name = 'cylm'
-env = os.getenv(env_name)
+tokens = os.environ.get('cylm').split('@')
+taskids = [''] * len(tokens)
+msgs = [''] * len(tokens)
 
-print("==========开始执行签到==========")
+async def huoquguanggaoid(token, timeout=3, index=0):
+    global taskids  
+    url = 'https://52.yyyy.run/api/sign/getSignAd'
+    headers = {
+        'os': 'android',
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
+        'Host': '52.yyyy.run'
+    }
+    response = requests.post(url, headers=headers, timeout=timeout)
+    result = response.json()
+    if result['code'] == 1:
+        taskids[index] = result['data']['task_id']
+    return taskids
 
-url1 = 'http://52.yyyy.run/api/sign/getSignAd'
-headers1 = {
-    'os': 'android',
-    'appid': '',
-    'terminal': '2',
-    'token': env,  
-    'user-agent': 'Mozilla/5.0 (Linux; Android 11; V2068A Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36 uni-app Html5Plus/1.0 (Immersed/29.0)',
-    'Content-Type': 'application/x-www-form-urlencoded',
-}
+async def qiandao(token, timeout=3, index=0):
+    print(f'开始执行第 {index+1} 个账号的签到任务\n')
+    global taskids  
+    if not taskids[index]:  
+        await huoquguanggaoid(token, index=index)
+    url = 'https://52.yyyy.run/api/sign/signTimeEnd'
+    headers = {
+        'os': 'android',
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '12',
+        'Host': '52.yyyy.run'
+    }
+    body = f'task_id={taskids[index]}'
+    response = requests.post(url, headers=headers, data=body, timeout=timeout)
+    result = response.json()
+    qdcode = result['code']
+    if qdcode == 1:
+        print(result['msg'], '\n')
+        global msgs
+        msgs[index] += result['msg'] + '\n'
+    else:
+        print('签到失败，正在尝试重新签到\n')
+        msgs[index] += '签到失败，正在尝试重新签到\n'
+        await huoquguanggaoid(token, index=index)
+        await asyncio.sleep(6)
+        await qiandao(token, index=index)
+        await asyncio.sleep(20)
 
-url2 = 'http://52.yyyy.run/api/sign/signTimeEnd'
-headers2 = {
-    'os': 'android',
-    'token': env,
-    'Content-Type': 'application/x-www-form-urlencoded',
-}
+async def qiandaoshengyucishu(token, timeout=3, index=0):
+    url = 'https://52.yyyy.run/api/sign/userSignData'
+    headers = {
+        'os': 'android',
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
+        'Host': '52.yyyy.run'
+    }
+    response = requests.post(url, headers=headers, timeout=timeout)
+    result = response.json()
+    if result['code'] == 1:
+        ykcs = result['data']['today_sign']
+        sycs = 3 - ykcs
+    return sycs
 
-url3 = 'http://52.yyyy.run/api/user/postWith'
-data3 = {'num': '1'}
-headers3 = {
-    'Referer': 'http://52.yyyy.run/pages/user/myWithdrawal.html',
-    'Origin': 'http://52.yyyy.run',
-}
-headers3.update(headers2)
+async def chaxunyue(token, timeout=3, index=0):
+    global msgs   
+    print(f'开始查询第 {index+1} 个账号的余额\n')
+    url = 'https://52.yyyy.run/api/user/index'
+    headers = {
+        'os': 'android',
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
+        'Host': '52.yyyy.run'
+    }
+    response = requests.post(url, headers=headers, timeout=timeout)
+    result = response.json()
+    if result['code'] == 1:
+        allmoney = result['data']['all_money']
+        print(f'当前金币余额：{allmoney}\n')
+        msgs[index] += f'当前金币余额：{allmoney}\n'
 
-with requests.Session() as session:
-    session.headers.update(headers1)
-    for _ in range(6):
-        response = session.post(url1)
-        task_id = response.json()['data']['task_id']
-        print(f"获取到的task_id为：{task_id}")
+async def tixian(token, timeout=3, index=0):
+    global msgs   
+    print(f'开始执行第 {index+1} 个账号的提现任务\n')
+    url = 'https://52.yyyy.run/api/user/postWith'
+    headers = {
+        'os': 'android',
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '5',
+        'Host': '52.yyyy.run'
+    }
+    body = 'num=2'   
+    response = requests.post(url, headers=headers, data=body, timeout=timeout)
+    result = response.json()
+    if result['code'] == 1:
+        print(result['msg'], '\n')
+        msgs[index] += result['msg'] + '\n'
+    else:
+        print(f'提现失败，{result["msg"]}\n')
+        msgs[index] += f'提现失败，{result["msg"]}\n'
 
-        session.headers.update(headers2)
-        data2 = {'task_id': str(task_id)}
-        response = session.post(url2, data=data2)
-        print(f"ID: {task_id}，运行返回：{response.text}")
-        time.sleep(15)
+async def main():
+    tasks = []
+    for i, token in enumerate(tokens):
+        tasks.append(huoquguanggaoid(token, index=i))
+    await asyncio.gather(*tasks)
 
-    session.headers.update(headers3)
-    response = session.post(url3, data=data3)
-    msg = response.json()['msg']
-    result = f"提现结果：{msg}"
-    print(result)
+    for i, token in enumerate(tokens):
+        sycs = await qiandaoshengyucishu(token, index=i)
+        for _ in range(sycs):
+            await qiandao(token, index=i)
+
+    tasks = []
+    for i, token in enumerate(tokens):
+        tasks.append(chaxunyue(token, index=i))
+    await asyncio.gather(*tasks)
+
+    tasks = []
+    for i, token in enumerate(tokens):
+        tasks.append(tixian(token, index=i))
+    await asyncio.gather(*tasks)
+
+asyncio.run(main())
