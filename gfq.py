@@ -1,9 +1,13 @@
-new Env('共富签');
+
+'''
+new Env('天瑞地安——共富签');
+'''
 import requests
 import os
+import json
 
-auth_str = os.getenv('gfq')
-AUTH_LIST = auth_str.split('@')
+auth_string = os.getenv('gfq')
+auth_list = auth_string.split('@')
 
 url = 'https://crm.rabtv.cn/v2/index/signIn'
 headers = {
@@ -20,19 +24,28 @@ headers = {
     'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
 }
 
-for auth in AUTH_LIST:
+counter = 1  
+
+for auth in auth_list:
+    if counter > 3:
+        print("想要代挂？没门")
+        break
+    
     headers['Authorization'] = auth
+    
     response = requests.post(url, headers=headers)
 
     if response.status_code == 200:
         data = response.json()
         code = data['code']
         if code == 0:
-            print("签到失败:", data['msg'])
+            print(f"第 {counter} 个账号签到失败:", data['msg'])
         else:
             score = data['data']['score']
             thumb_url = data['data']['info']['thumb']
             continue_sign_num = data['data']['continue_sign_num']
-            print(f"签到成功，得分为{score}，缩略图URL为{thumb_url}，连续签到次数为{continue_sign_num}")
+            print(f"第 {counter} 个账号签到成功，得分为{score}，缩略图URL为{thumb_url}，连续签到次数为{continue_sign_num}")
+        
+        counter += 1  
     else:
         print("请求失败，状态码为:", response.status_code)
