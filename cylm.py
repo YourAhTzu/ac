@@ -70,7 +70,7 @@ async def qiandaoshengyucishu(token, timeout=3, index=0):
     result = response.json()
     if result['code'] == 1:
         ykcs = result['data']['today_sign']
-        sycs = 3 - ykcs
+        sycs = 2 - ykcs
     return sycs
 
 async def chaxunyue(token, timeout=3, index=0):
