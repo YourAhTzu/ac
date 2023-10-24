@@ -1,6 +1,7 @@
 
 '''
 new Env('天瑞地安——共富签');
+变量名：共富签抓Authorization(有些号动态验证签到自己看看)
 q群：777974608（不定时开关）
 '''
 import requests
