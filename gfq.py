@@ -43,7 +43,7 @@ for auth in auth_list:
             score = data['data']['score']
             thumb_url = data['data']['info']['thumb']
             continue_sign_num = data['data']['continue_sign_num']
-            print(f"第 {counter} 个账号签到成功，得分为{score}，缩略图URL为{thumb_url}，连续签到次数为{continue_sign_num}")
+            print(f"第 {counter} 个账号签到成功，得分为{score}，连续签到次数{continue_sign_num}")
         
         counter += 1  
     else:
