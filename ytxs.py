@@ -1,6 +1,6 @@
 ''' 
 new Env('引体向上');
-抓任意域名的Authorization要bearer后面数据多号@隔开
+抓apichuanti.scleader.cn/域名的Authorization要bearer后面数据多号@隔开
 年终奖项目
 '''
 import os
