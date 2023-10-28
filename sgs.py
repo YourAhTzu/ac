@@ -1,10 +1,7 @@
 """
 new Env('申工社');
-微信小程序-好奇车生活-好物兑换
-抓包域名: fwdt.shengongshe.org
-抓包请求头里面: token 的值
-环境变量名称：sgs
-多账号@分开
+微信公众号:申工社抓fwdt.shengongshe.org的token变量名称:sgs多账号@分开
+诺打印token失效就抓签到的token
 """
 import requests
 import os
