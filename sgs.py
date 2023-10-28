@@ -1,5 +1,5 @@
 """
-new Env('	申工社');
+new Env('申工社');
 微信小程序-好奇车生活-好物兑换
 抓包域名: fwdt.shengongshe.org
 抓包请求头里面: token 的值
