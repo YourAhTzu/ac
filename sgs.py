@@ -5,6 +5,7 @@ new Env('申工社');
 """
 import requests
 import os
+import random
 
 tokens = os.environ.get("sgs").split("@") 
 
@@ -43,6 +44,7 @@ def get_media_ids(token):
         for news in news_list:
             media_id = news['media_id']
             media_ids.append(media_id)
+        random.shuffle(media_ids)
         return media_ids[:3]
 
 def execute_url(token, media_id):
@@ -70,4 +72,4 @@ if __name__ == "__main__":
         print("开始执行阅读任务")
         for media_id in media_ids:
             execute_url(token, media_id)
-        print("====================================")  
+        print("====================================")
