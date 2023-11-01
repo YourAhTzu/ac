@@ -1,7 +1,7 @@
 '''
 注册链接：https://52.yyyy.run//index/wechat/login/share_id/4063
 抓token环境名字cylm
-new Env('创娱联盟');（提现要去找客服激活直推0.3间接0.15要求完成签到）
+new Env('创娱联盟');
 声明声明：此脚本来源每天陪跑大佬的创娱联盟js改良成py在此特别感谢每天陪跑大佬
 '''
 import asyncio
@@ -70,7 +70,7 @@ async def qiandaoshengyucishu(token, timeout=3, index=0):
     result = response.json()
     if result['code'] == 1:
         ykcs = result['data']['today_sign']
-        sycs = 5 - ykcs
+        sycs = 3 - ykcs
     return sycs
 
 async def chaxunyue(token, timeout=3, index=0):
