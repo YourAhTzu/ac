@@ -24,7 +24,7 @@ headers = {
 tokens = os.getenv("jbct").split("@") 
 for token in tokens:
     headers["token"] = token
-    for _ in range(10):
+    for _ in range(3):
         delay = random.randint(15, 25)
         print("随机延迟 %d 秒" % delay)
         time.sleep(delay)
