@@ -4,7 +4,6 @@ new Env('聚宝抽屉');
 '''
 import os
 import requests
-import random
 import time
 
 print("开始执行签到任务")
@@ -22,12 +21,11 @@ headers = {
 }
 
 tokens = os.getenv("jbct").split("@") 
-for token in tokens:
-    headers["token"] = token
-    for _ in range(3):
-        delay = random.randint(15, 25)
-        print("随机延迟 %d 秒" % delay)
-        time.sleep(delay)
+while True:
+    for token in tokens:
+        headers["token"] = token
+        print("延迟十分钟")
+        time.sleep(600)
 
         response = requests.post(url, headers=headers)
         data = response.json()
