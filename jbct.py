@@ -21,7 +21,7 @@ headers = {
 }
 
 tokens = os.getenv("jbct").split("@") 
-while True:
+for _ in range(3):  # This loop will run three times
     for token in tokens:
         headers["token"] = token
         print("延迟十分钟")
