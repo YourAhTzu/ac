@@ -1,1 +1,1 @@
-https://gitee.com/YourAhTzu/your-ah-tzu/raw/master/cs.txt
+仓库目前停止维护恢复待定
