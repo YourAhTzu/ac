@@ -59,7 +59,11 @@ def reward(token):
     data = {}
     response = requests.post(url, headers=headers, json=data)
     if response.status_code == 200:
-        print("奖励领取成功")
+        reward_data = response.json()
+        reward_spar = reward_data["data"]["rewardSpar"]
+        print("获得奖励:", reward_spar, "晶石")
+    else:
+        print("您已领取今日能源晶石奖励")
 
 token = login()
 for _ in range(6):
