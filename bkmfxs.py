@@ -2,10 +2,9 @@ import requests
 import hashlib
 import time
 import os
-
-withdraws_item_id = '1'  #替换为实际的提现金额
+withdraws_item_id = '1'  #提现金额
 def notice():
-    print("=====开始获取远程公告====")#获取作者远程公告如过搬运请保留这个
+    print("=====开始获取远程公告====")
     url = "https://ghproxy.smallfawn.top/https://raw.githubusercontent.com/YourAhTzu/ac/main/Notice.json"
     try:
         response = requests.get(url)
@@ -14,7 +13,7 @@ def notice():
     except requests.RequestException as e:
         print(f"Error occurred while fetching notice: {e}")
 
-def finish(taskId):#执行任务
+def finish(taskId, cookie, account_index):
     timestamp = int(time.time())
     sign = hashlib.md5(f'7b7fpld4roey0e6e&taskId={taskId}&time={timestamp}'.encode()).hexdigest()
     url = f"http://api.ibreader.com/task_api/task/finish"
@@ -24,7 +23,7 @@ def finish(taskId):#执行任务
         'Content-Type': 'application/x-www-form-urlencoded; Charset=UTF-8',
         'Accept': '*/*',
         'Accept-Language': 'zh-cn',
-        'Cookie': os.environ.get('bkxs'),
+        'Cookie': cookie,
         'User-Agent': 'Mozilla/5.0 (Linux; Android 7.1.2; PCAM00 Build/NGI77B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/62.0.3202.84 Mobile Safari/537.36',
         'X-Client': 'sv=7.1.2;pm=PCAM00;ss=1080*2196;version=5.1.86.18.130500001;vId=60752445880d4366988c18aa9d9f6b80;signVersion=2;webVersion=new;oaid=null;pkv=1;ddid=DUzp43Y2YF9X-5bmS5YXSEZcB3nELTOxTV04RFV6cDQzWTJZRjlYLTVibVM1WVhTRVpjQjNuRUxUT3hUVjA0c2h1;androidosv=25;os=0;muk=ui98HJmkunswcEuBWDlg3A%3D%3D;firm=OPPO;duk=Bv6b4gAgfXcjaj%2BBwEtH32pUNNCFZYDKNOv%2Boplr96Q%3D;',
         'Referer': 'https://api.ibreader.com/task_api/task/getChapterTaskList',
@@ -45,9 +44,7 @@ def finish(taskId):#执行任务
             print("任务已完成")
     except requests.exceptions.RequestException as e:
         print("请求异常:", e)
-
-def withdraw():
-    print("=====开始执行提现=====")
+def withdraw(cookie, account_index):
     timestamp = str(int(time.time()))
     sign = hashlib.md5(('7b7fpld4roey0e6e&itemId=' + withdraws_item_id + '&platform=0&time=' + timestamp).encode()).hexdigest()
     url = f"https://increase.ibreader.com/task_api/task/v1/withdraw/valid"
@@ -57,7 +54,7 @@ def withdraw():
         'Content-Type': 'application/x-www-form-urlencoded; Charset=UTF-8',
         'Accept': '*/*',
         'Accept-Language': 'zh-cn',
-        'Cookie': os.environ.get('bkxs'),
+        'Cookie': cookie,
         'User-Agent': 'Mozilla/5.0 (Linux; Android 7.1.2; PCAM00 Build/NGI77B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/62.0.3202.84 Mobile Safari/537.36',
         'X-Client': 'sv=7.1.2;pm=PCAM00;ss=1080*2196;version=5.1.86.18.130500001;vId=60752445880d4366988c18aa9d9f6b80;signVersion=2;webVersion=new;oaid=null;pkv=1;ddid=DUzp43Y2YF9X-5bmS5YXSEZcB3nELTOxTV04RFV6cDQzWTJZRjlYLTVibVM1WVhTRVpjQjNuRUxUT3hUVjA0c2h1;androidosv=25;os=0;muk=ui98HJmkunswcEuBWDlg3A%3D%3D;firm=OPPO;duk=Bv6b4gAgfXcjaj%2BBwEtH32pUNNCFZYDKNOv%2Boplr96Q%3D;',
         'Referer': 'https://api.ibreader.com/task_api/task/getChapterTaskList',
@@ -80,8 +77,10 @@ def withdraw():
         print(f"信息异常: ❌, {response.text}, 原因：{e}")
 
 notice()
-print("======开始执行任务=======")
 task_ids = [1,3,8,96, 97, 98, 99, 100, 101, 102, 103, 104, 105,201,202,203,204,205,206,233, 234, 235, 236, 237, 238,490]
-for task_id in task_ids:
-    finish(task_id)
-withdraw()
+bkxs_accounts = os.environ.get('bkxs').split('&') 
+for account_index, account in enumerate(bkxs_accounts, start=1):
+    print(f"===开始执行第{account_index}账号任务===")
+    for task_id in task_ids:
+        finish(task_id, account, account_index)
+    withdraw(account, account_index)
