@@ -165,5 +165,7 @@ if __name__ == '__main__':
         a += 1
         run = Hqcsh(ck)
         msg += run.get_sign_msg()
+        for _ in range(10):
+            run.sign()
     if send:
         send("好奇车生活签到通知", msg)
