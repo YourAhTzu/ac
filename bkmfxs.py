@@ -2,7 +2,9 @@ import requests
 import hashlib
 import time
 import os
-withdraws_item_id = '1'  #提现金额
+
+withdraws_item_id = '30'  #默认30
+
 def notice():
     print("=====开始获取远程公告====")
     url = "https://ghproxy.smallfawn.top/https://raw.githubusercontent.com/YourAhTzu/ac/main/Notice.json"
