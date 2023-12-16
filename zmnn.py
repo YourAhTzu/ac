@@ -4,7 +4,6 @@ new Env('战马能量小程序');
 """
 import os
 import requests
-import json
 safe = os.getenv('zmnn')  # 自定义变量名字
 def message():
     url = f"https://zm.t7a.cn/api/getusercenter.php?safe={safe}"
@@ -38,7 +37,7 @@ def signin():#签到
     response = requests.get(url, headers=headers)
     response_json = response.json()
     msg = response_json['msg']
-    print(f"签到结果{msg}")
+    print(f"签到结果:{msg}")
 
 def strokehorse():#马儿抚摸
     url = f'https://zm.t7a.cn/api/strokehorse.php?safe={safe}'
@@ -52,7 +51,7 @@ def strokehorse():#马儿抚摸
     response = requests.get(url, headers=headers)
     response_json = response.json()
     msg = response_json['msg']
-    print(f"抚摸结果{msg}")
+    print(f"抚摸结果:{msg}")
 def getshare():#任务分享
     url = 'https://zm.t7a.cn/api/getchecklist.php?safe={safe}'
     headers = {
@@ -68,7 +67,7 @@ def getshare():#任务分享
     response_data = response.text
     data = json.loads(response_data)
     first_score = data['data'][0]['score']
-    print(f"获得{first_score}积分")
+    print(f"分享获得:{first_score}积分")
 def checkslgift():#马儿任务分享
     url = f'https://zm.t7a.cn/api/checkslgift.php?safe={safe}'
     headers = {
@@ -81,7 +80,7 @@ def checkslgift():#马儿任务分享
     response = requests.get(url, headers=headers)
     response_json = response.json()
     msg = response_json['msg']
-    print(f"分享结果{msg}")
+    print(f"分享结果:{msg}")
 
 def horseeat():#喂食
     url = f'https://zm.t7a.cn/api/horseeat.php?safe={safe}'
@@ -95,7 +94,7 @@ def horseeat():#喂食
     response = requests.get(url, headers=headers)
     response_json = response.json()
     msg = response_json['msg']
-    print(f"喂马结果{msg}")
+    print(f"喂马结果:{msg}")
 
 if __name__ == "__main__":
     signin()
