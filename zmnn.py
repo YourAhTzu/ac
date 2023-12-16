@@ -3,7 +3,7 @@ new Env('战马能量小程序');
 抓头部safe填入zmnn(简单几个任务有能力自己加)
 """
 import os
-impost json
+import json
 import requests
 safe = os.getenv('zmnn')  # 自定义变量名字
 def message():
