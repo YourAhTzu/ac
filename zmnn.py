@@ -4,6 +4,7 @@ new Env('战马能量小程序');
 """
 import os
 import requests
+import json
 safe = os.getenv('zmnn')  # 自定义变量名字
 def message():
     url = f"https://zm.t7a.cn/api/getusercenter.php?safe={safe}"
