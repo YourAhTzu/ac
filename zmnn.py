@@ -86,6 +86,7 @@ def horseeat():
     print("喂马结果:", msg)
 
 if __name__ == "__main__":
+    message()
     signin()
     strokehorse()
     checkslgift()
