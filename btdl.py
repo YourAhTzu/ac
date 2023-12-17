@@ -23,9 +23,11 @@ for i, ck in enumerate(cks, start=1):
         username = match_username.group(1)
     pattern_balance = r'<div class="t3">(.*?)</div>'
     match_balance = re.search(pattern_balance, html)
-    if match_balance:
-        balance = match_balance.group(1)
+    if match_username:
+    username = match_username.group(1)
     print("{}, 当前余额{}".format(username, balance))
+else:
+    print("未能获取用户名")
     url = 'http://123.129.219.247:9898/mobile/form.html'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36',
