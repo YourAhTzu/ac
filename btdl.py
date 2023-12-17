@@ -30,5 +30,5 @@ def buy_miner(number):
 numbers = os.environ.get('btdl').split('@')
 
 for i, number in enumerate(numbers, 1):
-    print(f"第{i}个号码任务：{number}")
+    print(f"开始执行第{i}个账号任务")
     buy_miner(number)
