@@ -1,7 +1,7 @@
 """
 new Env('小猪惠选');
 注册链接http://xiaozhu.tuesjf.cn/qrcode/NickBai5943341ac69104937493a7e2644d0208e688b.png
-和火锅一样的自己看着玩变量名xzyc填token(自己看着定时任务未做全)
+和火锅一样的自己看着玩变量名xzhx_token填token(自己看着定时任务未做全)
 北渡大佬修改了应该可以跑了
 """
 import requests
