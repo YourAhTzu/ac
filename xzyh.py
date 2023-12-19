@@ -1,7 +1,7 @@
 """
-new Env('小猪优惠');
+new Env('小猪惠选');
 注册链接http://xiaozhu.tuesjf.cn/qrcode/NickBai5943341ac69104937493a7e2644d0208e688b.png
-和火锅一样的自己看着玩变量名xzyh填token(自己看着定时任务未做全)
+和火锅一样的自己看着玩变量名xzhx填token(自己看着定时任务未做全)
 """
 import requests
 import time
@@ -22,7 +22,7 @@ def video():
     for id in ids:
         data = {
             'id': str(id),
-            'token': os.environ.get('xzyh') 
+            'token': os.environ.get('xzhx') 
         }
         response = requests.post(url, headers=headers, data=data)
         json_data = response.json()
@@ -45,7 +45,7 @@ def saveTankMoney():
         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
     }
     data = {
-        'token': os.environ.get('xzyh')  
+        'token': os.environ.get('xzhx')  
     }
     for _ in range(10):
         delay = random.randint(15, 25)
@@ -69,7 +69,7 @@ def LookRed():
     }
     data = {
         "id": "20",
-        "token": os.environ.get('xzyh')  
+        "token": os.environ.get('xzhx')  
     }
     response = requests.post(url, headers=headers, data=data)
     json_data = response.json()
