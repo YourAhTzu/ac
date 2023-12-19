@@ -7,7 +7,6 @@ import requests
 import time
 import random
 import os
-
 def video():
     print(">>>>>开始执行金币奖励<<<<<")
     url = 'http://xiaozhu.tuesjf.cn/apis/v1/lookVideo'
@@ -47,15 +46,14 @@ def saveTankMoney():
     data = {
         'token': os.environ.get('xzhx')  
     }
-    for _ in range(10):
+    for _ in range(1):
         delay = random.randint(15, 25)
-        print(f"{delay}秒之后执行签到")
         time.sleep(delay)
         response = requests.post(url, headers=headers, data=data)
         if response.status_code == 200:
             data = response.json()
             if 'msg' in data:
-                print(f"签到结果:{data['msg']}")
+                print(f"广告结果:{data['msg']}")
 
 def LookRed():
     print(">>>>>开始执行红包奖励<<<<<")
