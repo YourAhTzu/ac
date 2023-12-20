@@ -7,10 +7,13 @@ new Env('小猪惠选');
 import requests
 import time
 import os
+import json
+import random
 from concurrent.futures import ThreadPoolExecutor
 
 BF = False
-yc = int(os.environ.get("xzyc", "10"))
+yc = tuple(map(int, os.environ.get('xzyc', '20,28').split(',')))
+
 
 class XZHX:
     def __init__(self, ck1):
@@ -38,8 +41,9 @@ class XZHX:
             name = r["data"]["info"]["nickname"]
             balance = r["data"]["info"]["balance"]
             gold = r["data"]["info"]["gold"]
+            integral = r["data"]["info"]["integral"]
             rname = r["data"]["info"]["rank_name"]
-            print(f"[{name}]登录成功，账户类型[{rname}]--储蓄金[{gold}]--零钱余额[{balance}]")
+            print(f"[{name}]登录成功，账户类型[{rname}]--储蓄金[{gold}]--零钱余额[{balance}]--金币余额[{integral}]")
             return name
         else:
             print(f'登录失败: {r["msg"]}')
@@ -60,50 +64,64 @@ class XZHX:
 
     ##金币奖励
     def jbjl(self, n, t):
-        video_url = 'http://xiaozhu.tuesjf.cn/apis/v1/lookVideo'
-        data = {'id': t, 'token': self.token}
-        re = requests.post(video_url, headers=self.hd, data=data).json()
-        msg = re["msg"]
-        print(f"[{n}]领取金币奖励[{t}]: {msg}")
-        return msg
+        try:
+            video_url = 'http://xiaozhu.tuesjf.cn/apis/v1/lookVideo'
+            data = {'id': t, 'token': self.token}
+            re = requests.post(video_url, headers=self.hd, data=data).json()
+            msg = re["msg"]
+            print(f"[{n}]领取金币奖励[{t}]: {msg}")
+            return msg
+        except json.decoder.JSONDecodeError as e:
+            print(f"{e}")
 
     ##广告奖励
     def ggjl(self, u, n):
-        url = "http://xiaozhu.tuesjf.cn/apis/v1/saveTankMoney"
-        data = {
-            'token': self.token
-        }
-        r = requests.post(url, headers=self.hd, data=data).json()
-        msg = r["msg"]
-        print(f"[{n}]第{u}领取广告奖励: {msg}")
-        return msg
+        try:
+            url = "http://xiaozhu.tuesjf.cn/apis/v1/saveTankMoney"
+            data = {
+                'token': self.token
+            }
+            r = requests.post(url, headers=self.hd, data=data).json()
+            msg = r["msg"]
+            print(f"[{n}]第{u}领取广告奖励： {msg}")
+            return msg
+        except json.decoder.JSONDecodeError as e:
+            print(f"{e}")
+
 
     ##红包奖励
     def hbjl(self, n):
-        id_list, hbid = self.ids()
-        url = 'http://xiaozhu.tuesjf.cn/apis/v1/LookRed'
-        data = {
-            'id': hbid,
-            'token': self.token
-        }
-        r = requests.post(url, headers=self.hd, data=data).json()
-        msg = r["msg"]
-        print(f"[{n}]领取红包奖励: {msg}")
+        try:
+            id_list, hbid = self.ids()
+            url = 'http://xiaozhu.tuesjf.cn/apis/v1/LookRed'
+            data = {
+                'id': hbid,
+                'token': self.token
+            }
+            r = requests.post(url, headers=self.hd, data=data).json()
+            msg = r["msg"]
+            print(f"[{n}]领取红包奖励: {msg}")
+        except json.decoder.JSONDecodeError as e:
+            print(f"{e}")
 
     def start(self):
         aa = self.login()
+        q_time, j_time = yc
+        yc_time = random.randint(q_time, j_time)
         if aa:
             id_list, hbid = self.ids()
             for y in id_list:
-                time.sleep(yc)
-                y = self.jbjl(aa, y)
-                if y == "当前已领取请勿重复领取":
-                    break
-            time.sleep(yc)
+                print(f'等待{yc_time}s')
+                time.sleep(random.uniform(20, 28))
+                self.jbjl(aa, y)
+            print(f'等待{yc_time}s')
+            time.sleep(yc_time)
             self.hbjl(aa)
-            time.sleep(yc)
+            print(f'等待{yc_time}s')
+            time.sleep(yc_time)
             for u in range(13):
-                time.sleep(yc)
+                print(f'等待{yc_time}s')
+                time.sleep(yc_time)
                 o = self.ggjl(u, aa)
                 if o == "该任务奖励已达上限":
                     break
@@ -118,16 +136,21 @@ if __name__ == "__main__":
         print("变量[xzhx_token]不存在,请设置[xzhx_token]变量后运行")
         exit(-1)
     cookies = cookie.split("&")
-    i = 0
+    i = 1
     print(f"小猪惠选共获取到{len(cookies)}个账号")
 
     if BF:
         with ThreadPoolExecutor(max_workers=5) as executor:
             executor.map(BF1, cookies)
+            n = random.uniform(4, 6)
+            print(f'{n}s后进行下一个账号')
+            time.sleep(n)
     else:
         for ck in cookies:
+            print(f"------账号{i}-----")
             XZHX(ck).start()
-            if len(cookies) > i + 1:
-                print("------6s后运行下一个账号---")
-                time.sleep(6)
-        i += 1
+            if i < len(cookies):
+                i += 1
+                n = random.uniform(4, 6)
+                print(f'{n}s后进行下一个账号')
+                time.sleep(n)
