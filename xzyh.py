@@ -9,11 +9,11 @@ import time
 import os
 import json
 import random
+import datetime
 from concurrent.futures import ThreadPoolExecutor
 
 BF = False
 yc = tuple(map(int, os.environ.get('xzyc', '20,28').split(',')))
-
 
 class XZHX:
     def __init__(self, ck1):
@@ -36,91 +36,127 @@ class XZHX:
     def login(self):
         url = f'http://xiaozhu.tuesjf.cn/apis/v1/user_info?token={self.token}'
         r = requests.get(url, headers=self.hd).json()
-        code = r["msg"]
-        if code == "获取成功":
+        msg = r["msg"]
+        if msg == "获取成功":
             name = r["data"]["info"]["nickname"]
             balance = r["data"]["info"]["balance"]
             gold = r["data"]["info"]["gold"]
             integral = r["data"]["info"]["integral"]
             rname = r["data"]["info"]["rank_name"]
-            print(f"[{name}]登录成功，账户类型[{rname}]--储蓄金[{gold}]--零钱余额[{balance}]--金币余额[{integral}]")
-            return name
+            print(f"账号[{name}]登录成功--账户等级[{rname}]--储蓄金余额[{gold}]--我的零钱[{balance}]--金币余额[{integral}]")
+            k = str(integral).split(".")[0]
+            if 7 <= datetime.datetime.now().hour <= 9:
+                print("----开始签到----")
+                self.signid(name)
+                time.sleep(4)
+            if 21 <= datetime.datetime.now().hour <= 23:
+                print("----进行金币兑换----")
+                self.jbdh(name, k)
+                time.sleep(4)
+            print("----开始领取金币奖励----")
+            self.ids(name)
+            time.sleep(4)
+            print("----开始领取广告奖励----")
+            self.ggjl(name)
         else:
             print(f'登录失败: {r["msg"]}')
-            return None
 
     ##获取任务id
-    def ids(self):
+    def ids(self, m):
         try:
             url = f'http://xiaozhu.tuesjf.cn/apis/v1/updateActive?token={self.token}'
             r = requests.get(url, headers=self.hd).json()
             id_list = [item['id'] for item in r['data']['list']]
             hbid = r["data"]["red_order"]["id"]
-            return id_list, hbid
+            for y in id_list:
+                time.sleep(self.yc_time())
+                r = self.jbjl(m, y)
+                if r in ["该任务奖励已达上限", "当前已领取请勿重复领取"]:
+                    break
+            time.sleep(4)
+            print("----开始领取红包奖励----")
+            self.hbjl(m, hbid)
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
     ##获取签到id
-    def signid(self):
+    def signid(self, m):
         try:
             url = f'http://xiaozhu.tuesjf.cn/apis/v1/indexSignShow?token={self.token}'
             r = requests.get(url, headers=self.hd).json()
             qdids = [item['id'] for item in r['data']]
-            return qdids
+            for s in qdids:
+                time.sleep(3)
+                r = self.sign(m, s)
+                if r == "今日已签到":
+                    break
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
     ##签到
-    def sign(self, t, s):
+    def sign(self, m, s):
         try:
             url = 'http://xiaozhu.tuesjf.cn/apis/v1/signSave'
             data = {'id': s, 'token': self.token}
             re = requests.post(url, headers=self.hd, data=data).json()
             msg = re["msg"]
-            print(f"[{t}]签到: {msg}")
+            print(f"[{m}]签到: {msg}")
             return msg
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
     ##金币奖励
-    def jbjl(self, v, t):
+    def jbjl(self, m, t):
         try:
             url = 'http://xiaozhu.tuesjf.cn/apis/v1/lookVideo'
             data = {'id': t, 'token': self.token}
             re = requests.post(url, headers=self.hd, data=data).json()
             msg = re["msg"]
-            print(f"[{v}]领取金币奖励[{t}]: {msg}")
+            print(f"[{m}]领取金币奖励[{t}]: {msg}")
             return msg
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
     ##广告奖励
-    def ggjl(self, u, d):
+    def ggjl(self, m):
+        for u in range(3):
+            try:
+                url = "http://xiaozhu.tuesjf.cn/apis/v1/saveTankMoney"
+                data = {
+                    'token': self.token
+                }
+                r = requests.post(url, headers=self.hd, data=data).json()
+                msg = r["msg"]
+                print(f"[{m}]第{u}领取广告奖励：{msg}")
+                if msg == "该任务奖励已达上限":
+                    break
+                time.sleep(self.yc_time())
+            except json.decoder.JSONDecodeError as e:
+                print(f"{e}")
+
+    ##红包奖励
+    def hbjl(self, m, h):
         try:
-            url = "http://xiaozhu.tuesjf.cn/apis/v1/saveTankMoney"
+            url = 'http://xiaozhu.tuesjf.cn/apis/v1/LookRed'
             data = {
+                'id': h,
                 'token': self.token
             }
             r = requests.post(url, headers=self.hd, data=data).json()
             msg = r["msg"]
-            print(f"[{d}]第{u}领取广告奖励： {msg}")
-            return msg
+            print(f"[{m}]领取红包奖励: {msg}")
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
-
-    ##红包奖励
-    def hbjl(self, n):
+    ##金币兑换
+    def jbdh(self, m, k):
         try:
-            id_list, hbid = self.ids()
-            url = 'http://xiaozhu.tuesjf.cn/apis/v1/LookRed'
-            data = {
-                'id': hbid,
-                'token': self.token
-            }
-            r = requests.post(url, headers=self.hd, data=data).json()
-            msg = r["msg"]
-            print(f"[{n}]领取红包奖励: {msg}")
+            url = 'http://xiaozhu.tuesjf.cn/apis/v1/receiveVideo'
+            data = {'num': k, 'token': self.token}
+            re = requests.post(url, headers=self.hd, data=data).json()
+            msg = re["msg"]
+            print(f"[{m}]金币兑换: {msg}")
+            return msg
         except json.decoder.JSONDecodeError as e:
             print(f"{e}")
 
@@ -129,40 +165,10 @@ class XZHX:
         yc_time1 = random.randint(q_time, j_time)
         return yc_time1
 
-    def start(self):
-        aa = self.login()
-        print("----开始签到----")
-        if aa:
-            qdids = self.signid()
-            for s in qdids:
-                time.sleep(3)
-                r = self.sign(aa, s)
-                if r == "签到成功" or "今日已签到":
-                    break
-            time.sleep(4)
-
-            print("----开始领取金币奖励----")
-            id_list, hbid = self.ids()
-            for y in id_list:
-                time.sleep(self.yc_time())
-                self.jbjl(aa, y)
-            time.sleep(4)
-
-            print("----开始领取红包奖励----")
-            self.hbjl(aa)
-            time.sleep(4)
-
-            print("----开始领取广告奖励----")
-            for u in range(12):
-                time.sleep(self.yc_time())
-                o = self.ggjl(u, aa)
-                if o == "该任务奖励已达上限":
-                    break
-
 if __name__ == "__main__":
     def BF1(ck):
         xzhx = XZHX(ck)
-        xzhx.start()
+        xzhx.login()
     if 'xzhx_token' in os.environ:
         cookie = os.environ.get("xzhx_token")
     else:
@@ -181,7 +187,7 @@ if __name__ == "__main__":
     else:
         for ck in cookies:
             print(f"------账号{i}-----")
-            XZHX(ck).start()
+            XZHX(ck).login()
             if i < len(cookies):
                 i += 1
                 n = random.uniform(4, 6)
