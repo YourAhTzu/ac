@@ -22,11 +22,16 @@ def login():
     }
     response = requests.post(url, headers=headers, json=data)
     response_data = response.json()
-    msg = response_data['msg']
-    token = response_data['token']
-    print(msg)
-    return token
-
+    if response_data['code'] == 1:
+        token = response_data['token']
+        wx_nickname = response_data['data']['wx_nickname']
+        jade = response_data['data']['jade']
+        rough = response_data['data']['rough']
+        print("用户:", wx_nickname, "当前灵玉:", jade, "当前原石:", rough)
+        return token
+    else:
+        print("登录失败")
+        return None
 def getPerTimeJade(token):
     print(">>>>>开始执行领取灵玉<<<<<")
     url = 'http://xfmz.hfqx.xyz:85/home/user/getPerTimeJade'
@@ -49,7 +54,6 @@ def getPerTimeJade(token):
         print(json_data['msg'])
     else:
         print('请求失败')
-
 def tap(token):
     print(">>>>>执行领取原石<<<<<")
     url = 'http://xfmz.hfqx.xyz:85/home/card/tap'
