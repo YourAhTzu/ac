@@ -105,7 +105,7 @@ def withdraw():
     
 def notice():
     try:
-        print(requests.get("https://tinyurl.com/yndmt3ww", timeout=5).content.decode("utf-8"))
+        print(requests.get("https://ghproxy.smallfawn.top/https://raw.githubusercontent.com/YourAhTzu/ac/main/Notice.json", timeout=5).content.decode("utf-8"))
     except requests.RequestException as e:
         print(f"❗获取通知时出错: {e}")
 
