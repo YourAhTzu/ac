@@ -1,6 +1,11 @@
 import os
 import requests
-def login():
+def notice():
+    try:
+        print(requests.get("https://ghproxy.smallfawn.top/https://raw.githubusercontent.com/YourAhTzu/ac/main/Notice.json", timeout=5).content.decode("utf-8"))
+    except requests.RequestException as e:
+        print(f"❗获取通知时出错: {e}")
+def login(account, pwd):
     print(">>>>>开始登录账号<<<<<")
     url = 'http://xfmz.hfqx.xyz:85/home/index/login'
     headers = {
@@ -14,8 +19,6 @@ def login():
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
     }
-    xfmz = os.getenv('xfmz')
-    account, pwd = xfmz.split('&')
     data = {
         'account': account,
         'pwd': pwd
@@ -74,9 +77,17 @@ def tap(token):
     print(data["msg"])
 xfmz = os.getenv('xfmz')
 if xfmz:
-    print("偷你数据的脚本请谨慎运行")
-    token = login()
-    getPerTimeJade(token)
-    tap(token)
+    notice()
+    accounts = xfmz.split('@')
+    for account in accounts:
+        account_info = account.split('&')
+        if len(account_info) == 2:
+            token = login(account_info[0], account_info[1])
+            if token:
+                getPerTimeJade(token)
+                tap(token)
+            print("====================================")
+        else:
+            print("账号信息格式错误")
 else:
     print("请填写数据后重新运行")
