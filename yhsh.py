@@ -36,7 +36,7 @@ def flow(device_id, access_token):
 def member(device_id, access_token):
     print(">>>>>首页签到任务<<<<<")
     timestamp = str(int(time.time() * 1000))    
-    url = f"url = "https://api.yonghuivip.com/web/coupon/signreward/sign?timestamp={timestamp}&channel=android&platform=android&v=9.12.0.12&app_version=9.12.0.12&sellerid=&channelSub=&jysessionid=9d813fd8-366c-42a6-a409-b5097c14cc5e&brand=realme&model=RMX3562&os=android&osVersion=android31&networkType=WIFI&screen=2248*1080&productLine=YhStore&appType=h5&cityid=11&deviceid={device_id}&shopid=9637&memberid=962892903519470906&access_token={access_token}"
+    url = "https://api.yonghuivip.com/web/coupon/signreward/sign?timestamp={timestamp}&channel=android&platform=android&v=9.12.0.12&app_version=9.12.0.12&sellerid=&channelSub=&jysessionid=9d813fd8-366c-42a6-a409-b5097c14cc5e&brand=realme&model=RMX3562&os=android&osVersion=android31&networkType=WIFI&screen=2248*1080&productLine=YhStore&appType=h5&cityid=11&deviceid={device_id}&shopid=9637&memberid=962892903519470906&access_token={access_token}"
 headers = {
     "Host": "api.yonghuivip.com",
     "Connection": "keep-alive",
