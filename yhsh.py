@@ -65,10 +65,10 @@ def member(device_id, access_token):
     code = response_data["code"]
     if code == 0:
         credit = response_data["data"]["signrewardvo"]["credit"]
-        print(f"签到结果:{credit}")
+        print(f"恭喜获得:{credit}积分")
     else:
         message = response_data["message"]
-        print(f"签到结果:{message}")
+        print(f"签到失败原因:{message}")
 def main():
     tokens_str = os.environ.get('yhsh')
     if not tokens_str:
