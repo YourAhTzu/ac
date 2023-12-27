@@ -1,6 +1,6 @@
 ''' 
 new Env('永辉生活');
-此脚本仅供测试未完善
+果园签到要在七点之后运行(有bug及时反馈)
 '''
 import requests
 import time
