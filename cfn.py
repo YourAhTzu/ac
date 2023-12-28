@@ -27,7 +27,7 @@ def showIndexData():
 def lookVideo():
     while True:
         auto_save = showIndexData()
-        if auto_save < 10:
+        if auto_save < 15:
             url = 'http://cfn.tuesjf.cn/apis/v1/lookVideo'
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36  XiaoMi/MiuiBrowser/10.8.1 LT-APP/45/105/YM-RT/',
@@ -80,7 +80,7 @@ def cachSave():
         "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
     }
     data = {
-        "id": "3",
+        "id": "4",
         "token": token
     }  
     response = requests.post(url, headers=headers, data=data)
