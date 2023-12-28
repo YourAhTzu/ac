@@ -1,10 +1,44 @@
 ''' 
 new Env('永辉生活');
-果园签到要在七点之后运行(有bug及时反馈)
+果园签到要在七点之后运行抓任意域名的deviceid和access_token(有bug及时反馈)
+新增果园浇水其余后期慢慢
 '''
 import requests
 import time
 import os
+def watering(device_id, access_token):
+    print(">>>>>果园浇水<<<<<")
+    timestamp = str(int(time.time() * 1000))
+    url = f"https://activity.yonghuivip.com/api/web/flow/farm/watering?timestamp={timestamp}&channel=android&platform=android&v=9.12.0.12&sellerid=&deviceid={device_id}&shopid=9637&memberid=962892903519470906&app_version=9.12.0.12&channelSub=&brand=realme&model=RMX3562&os=android&osVersion=android31&networkType=5G&screen=2248*1080&productLine=YhStore&appType=h5&access_token={access_token}"
+    headers = {
+    "Host": "activity.yonghuivip.com",
+    "Connection": "keep-alive",
+    "Content-Length": "87",
+    "X-YH-Biz-Params": "xdotdy=--&gib=--,0(-$,&gvo=+$0_+)*,+",
+    "Accept": "application/json",
+    "X-YH-Context": "origin=h5&morse=1",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36YhStore/9.12.0.12 cn.yonghui.hyd/2022952001 (client/phone; Android 31; realme/RMX3562)",
+    "Content-Type": "application/json",
+    "Origin": "https://m.yonghuivip.com",
+    "X-Requested-With": "cn.yonghui.hyd",
+    "Sec-Fetch-Site": "same-site",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://m.yonghuivip.com/",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
+    data = {
+    "activityCode": "HXNC-QG",
+    "shopId": "",
+    "channel": "",
+    "inviteTicket": "",
+    "inviteShopId": ""
+    }
+    response = requests.post(url, headers=headers, json=data)
+    response_data = response.json()
+    ladder = response_data["data"]["ladderText"]
+    print(f"浇水结果:{ladder}")
 def flow(device_id, access_token):
     print(">>>>>果园签到<<<<<")
     timestamp = str(int(time.time() * 1000))    
@@ -78,6 +112,7 @@ def main():
     for pair in token_pairs:
         device_id, token = pair.split('&')
         flow(device_id, token)
+        watering(device_id, token)
         member(device_id, token)
         time.sleep(5)
         print("----------------------")
