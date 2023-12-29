@@ -113,9 +113,9 @@ def main():
         device_id, access_token = pair.split('&')
         member(device_id, access_token)
         flow(device_id, access_token)
-        watering(device_id, access_token)
-        time.sleep(5)
-        print("----------------------")
+        for _ in range(3):
+            watering(device_id, access_token)
+            time.sleep(5)
 if __name__ == "__main__":
     print(">>>>>开始执行所有任务<<<<<")
     main()
