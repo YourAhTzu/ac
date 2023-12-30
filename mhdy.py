@@ -35,6 +35,7 @@ def login(tel, pwd):
     token = data["token"]
     uid = data["id"]
     return token, uid
+
 def qian_dao(token, uid):
     url = "http://mhapi.youwanzz.com:4005/Index/QianDao"
     headers = {
@@ -57,10 +58,11 @@ def qian_dao(token, uid):
     response = requests.post(url, headers=headers, data=data)
     result = response.json()
     print(result['msg'])
+
 if __name__ == '__main__':
     mhdy = os.environ.get('mhdy')
     if mhdy:
-        tel, pwd = mhd.split('&')
+        tel, pwd = mhdy.split('&')
         token, uid = login(tel, pwd)
         qian_dao(token, uid)
     else:
