@@ -126,7 +126,7 @@ if __name__ == '__main__':
         if token and uid:
             qian_dao(token, uid)
             jinbi = GetHome(token, uid)
-            if int(jinbi) > 100:  
+            if float(jinbi) > 100:  
                 DuiHuanKj(token, uid)
             else:
                 print("当前金币不足，无法购买月卡")
