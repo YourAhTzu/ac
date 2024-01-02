@@ -1,10 +1,12 @@
+'''
+提现金额自定义格式:token&金额ID抓提现搜myDuties即可看到id
+'''
 import requests
 import time
 import json
 import os
-
-token = os.environ.get('cfn')
-
+cfn = os.environ.get('cfn')
+token, id = cfn.split('&')
 def showIndexData():
     url = f'http://cfn.tuesjf.cn/apis/v1/showIndexData?token={token}'
     headers = {
@@ -23,7 +25,6 @@ def showIndexData():
     data = response.json()
     auto_save = data.get('data', {}).get('auto_save')
     return auto_save
-
 def lookVideo():
     while True:
         auto_save = showIndexData()
@@ -47,7 +48,6 @@ def lookVideo():
             time.sleep(15)
         else:
             break
-
 def receiveVideo():
     print(">>>>>开始领取收益<<<<<")
     url = 'http://cfn.tuesjf.cn/apis/v1/receiveVideo'
@@ -65,7 +65,6 @@ def receiveVideo():
     result = response.json()
     msg = result['msg']
     print(f"领取结果:{msg}")
-
 def cachSave():
     print(">>>>>开始提现<<<<<")
     url = "http://cfn.tuesjf.cn/apis/v1/cachSave"
@@ -80,7 +79,7 @@ def cachSave():
         "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
     }
     data = {
-        "id": "4",
+        "id": id,
         "token": token
     }  
     response = requests.post(url, headers=headers, data=data)
@@ -91,7 +90,6 @@ def cachSave():
         print("提现成功")
     else:
         print("已提现")
-
 if __name__ == "__main__":
     receiveVideo()
     lookVideo()
