@@ -1,6 +1,11 @@
+'''
+BY:YourAhTzu
+日期:1.10 17:57
+new Env('申工社');
+抓fwdt.shengongshe.org中的token变量名字sgs
+'''
 import os
 import requests
-
 def sign(token):
     url = "https://fwdt.shengongshe.org/sgsWchartApi/api/My/sign"
     headers = {
@@ -20,7 +25,6 @@ def sign(token):
     data = response.json()
     sign = data["msg"]
     print(f"签到结果:{sign}")
-
 def news(token):
     url = "https://fwdt.shengongshe.org/sgsWchartApi/api/ImageText/list"
     headers = {
@@ -47,7 +51,7 @@ def news(token):
     news = response_json['data']['news']
     for i in range(3):
         media_id = news[i]['media_id']
-        read(media_id)
+        read(token, media_id)
 
 def read(token, media_id):
     url = "https://fwdt.shengongshe.org/sgsWchartApi/api/ImageText/read"
@@ -71,7 +75,6 @@ def read(token, media_id):
     data = response.json()
     read_result = data["msg"]
     print(f"阅读结果:{read_result}")
-
 if __name__ == "__main__":
     token = os.getenv("sgs")
     if token:
