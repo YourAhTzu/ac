@@ -30,6 +30,27 @@ def sign(token):
         print(f"签到结果:{msg}")
     else:
         print("已签到")
+def video(token):
+    url = "https://new.zzpt.top/mini/task/video"
+    headers = {
+        "Host": "new.zzpt.top",
+        "Connection": "keep-alive",
+        "Content-Length": "0",
+        "charset": "utf-8",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160049 MMWEBSDK/20231105 MMWEBID/2307 MicroMessenger/8.0.44.2502(0x28002C51) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64 MiniProgramEnv/android",
+        "content-type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip,compress,br,deflate",
+        "userid": token,
+        "Referer": "https://servicewechat.com/wxda7b83cfd34c7fdf/4/page-frame.html"
+    }
+    response = requests.post(url, headers=headers)
+    response_data = response.json()
+    code = response_data["code"]
+    if code == 0:
+        msg = response_data["msg"]
+        print(f"观看结果:{msg}")
+    else:
+        print("已完成")
 def lottery(token):
     url = "https://new.zzpt.top/mini/jigsaw/get"
     headers = {
@@ -78,15 +99,19 @@ if __name__ == "__main__":
     if userid:
         tokens_list = userid.split("@")
         for i, token in enumerate(tokens_list):
-            print(f">>>>>开始执行第 {i+1} 号任务<<<<<")  
+            print(f">>>>>开始执行第{i+1}个号任务<<<<<")  
             print(">>>>>领取抽奖机会<<<<<")
             sign(token)
-            print(">>>>>龙卡兑换余额<<<<<")
-            Exchange(token)
+            print(">>>>>开始观看广告<<<<<")    
+            for _ in range(2):
+                video(token)
+                time.sleep(random.randint(1, 5))
             print(">>>>>开始执行抽奖<<<<<")
             for _ in range(8):
                 lottery(token)
                 time.sleep(random.randint(1, 5))
+            print(">>>>>龙卡兑换余额<<<<<")
+            Exchange(token)
             print("========================================")  
     else:
         print("未找到环境变量ddyx")
