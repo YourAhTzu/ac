@@ -1,9 +1,10 @@
 """
 cron: 0 8 * * *
 new Env('点点优选');
+入口:http://wxzdy.qrurl.net/wxcode/240124/1fe1dab43d3d0b4af3564c075b93465b.jpeg
 微信捉包new.zzpt.top中的userid
 青龙变量 export ddyx="userid@userid" 多账号@隔开
-基本任务已完成
+邀请后期在做
 """
 import os
 import requests
@@ -73,6 +74,27 @@ def lottery(token):
     response_data = response.json()
     msg = response_data["msg"]
     print(f"抽奖结果:{msg}")
+def exchange(token):
+    url = "https://new.zzpt.top/mini/jigsaw/exchange"
+    headers = {
+        "Host": "new.zzpt.top",
+        "Connection": "keep-alive",
+        "Content-Length": "0",
+        "charset": "utf-8",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160049 MMWEBSDK/20231105 MMWEBID/2307 MicroMessenger/8.0.44.2502(0x28002C51) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64 MiniProgramEnv/android",
+        "content-type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip,compress,br,deflate",
+        "userid": token,
+        "Referer": "https://servicewechat.com/wxda7b83cfd34c7fdf/4/page-frame.html"
+    }
+    response = requests.post(url, headers=headers)
+    response_data = response.json()
+    code = response_data["code"]
+    if code == 0:
+        msg = response_data["msg"]
+        print(f"兑换结果:{msg}")
+    else:
+        print("未达到要求兑换失败")
 def Exchange(token):
     url = "https://new.zzpt.top/mini/jigsaw/exchangePriceByCard/87"
     headers = {
@@ -100,16 +122,18 @@ if __name__ == "__main__":
         tokens_list = userid.split("@")
         for i, token in enumerate(tokens_list):
             print(f">>>>>开始执行第{i+1}个号任务<<<<<")  
-            print(">>>>>领取抽奖机会<<<<<")
+            print(">>>>>开始每日登录<<<<<")
             sign(token)
-            print(">>>>>开始观看广告<<<<<")    
+            print(">>>>>开始激励广告<<<<<")    
             for _ in range(2):
                 video(token)
-                time.sleep(random.randint(1, 5))
-            print(">>>>>开始执行抽奖<<<<<")
-            for _ in range(8):
+                time.sleep(random.randint(15, 30))
+            print(">>>>>开始执行抽龙卡<<<<<")
+            for _ in range(4):
                 lottery(token)
-                time.sleep(random.randint(1, 5))
+                time.sleep(random.randint(5, 10))
+            print(">>>>>集卡兑换余额<<<<<")
+            exchange(token)
             print(">>>>>龙卡兑换余额<<<<<")
             Exchange(token)
             print("========================================")  
