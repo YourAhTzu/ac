@@ -2,7 +2,7 @@
 new Env('天瑞地安');
 BY:YourAhTzu
 日期:1.31 15:15
-抓authorization填入drda函数多号@
+抓authorization填入trda变量多号@
 '''
 import requests
 import os
