@@ -27,7 +27,8 @@ def ad(ck):
         "Cookie": ck
     }
     data = {
-        "id": "2453"
+        "id": "2453",
+        "ad_key": "4057f666a20568d68c1f412184c7927a-2453"
     }
     response = requests.post(url, headers=headers, data=data)
     json_data = response.json()
@@ -51,16 +52,19 @@ def Reward(ck):
     }
     data = {
         "uid": "2453",
-        "ad_key": "fd581e2d753c2e2c6b0fe83a3ef8e0d2-2453"
+        "ad_key": "4057f666a20568d68c1f412184c7927a-2453"
     }
     response = requests.post(url, headers=headers, data=data)
     json_data = response.json()
     money = json_data["money"]
-    print(f"账号余额:{money}")
+    print(f"提交广告成功，当前账号余额:{money}元")
 if __name__ == '__main__':
     cks = os.environ.get('ymzc')
     tokens_list = cks.split('@')
-    for ck in tokens_list:
+    num = len(tokens_list)
+    print(f"=====成功获取到{num}个账号=====")   
+    for num, ck in enumerate(tokens_list, start=1):
+        print(f"=====开始执行第{num}个账号任务=====")
         for _ in range(10):
             ad(ck)
             time.sleep(random.randint(30, 40))
