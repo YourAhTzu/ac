@@ -6,6 +6,7 @@ new Env('永辉生活');
 import requests
 import time
 import os
+import traceback
 def member(device_id, access_token):
     print(">>>>>首页签到任务<<<<<")
     timestamp = str(int(time.time() * 1000))    
@@ -110,12 +111,15 @@ def main():
         return
     token_pairs = tokens_str.split('@')
     for pair in token_pairs:
-        device_id, access_token = pair.split('&')
-        member(device_id, access_token)
-        flow(device_id, access_token)
-        for _ in range(3):
-            watering(device_id, access_token)
-            time.sleep(5)
+        try:
+            device_id, access_token = pair.split('&')
+            member(device_id, access_token)
+            flow(device_id, access_token)
+            for _ in range(3):
+                watering(device_id, access_token)
+                time.sleep(5)
+        except:
+            traceback.print_exec()
 if __name__ == "__main__":
     print(">>>>>开始执行所有任务<<<<<")
     main()
