@@ -1,8 +1,8 @@
 '''
 new Env('六度圈脉');
-注册链接:https://liudu.hongbaoquanzi.com/#/?spm=1583.1.0.4.1
+注册链接:https://liudu.hongbaoquanzi.com/#/?spm=1583.1.0.4.1(27,28行手动内置ps:拉整体会覆盖)
 BY:YourAhTzu
-日期:2.. 11:04
+日期:2.5 11:04
 抓authorization填入ldqm函数多号@
 '''
 import requests
@@ -24,8 +24,8 @@ def click(authorization):
     }
     data = {
         "type": 2,
-        "longitude": "115.12466424",
-        "latitude": "27.21958292",
+        "longitude": "",#自己的
+        "latitude": "",#自己的
         "id": 1
     }
     response = requests.post(url, json=data, headers=headers)
