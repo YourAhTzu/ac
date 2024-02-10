@@ -2,6 +2,7 @@
 new Env('永辉生活');
 抓任意域名的deviceid和access_token(有bug及时反馈)
 果园任务七点之后才刷新
+2.11 4:35(修复浇水任务完整执行跳过)
 '''
 import requests
 import time
@@ -70,39 +71,46 @@ def flow(device_id, access_token):
     data = response.json()
     sign = data["data"]["signText"]
     print(f"果园签到结果:{sign}")        
-def watering(device_id, access_token):
+def watering(device_id, access_token, code=0):
     print(">>>>>果园浇水<<<<<")
     timestamp = str(int(time.time() * 1000))
     url = f"https://activity.yonghuivip.com/api/web/flow/farm/watering?timestamp={timestamp}&channel=android&platform=android&v=9.12.0.12&sellerid=&deviceid={device_id}&shopid=9637&memberid=962892903519470906&app_version=9.12.0.12&channelSub=&brand=realme&model=RMX3562&os=android&osVersion=android31&networkType=5G&screen=2248*1080&productLine=YhStore&appType=h5&access_token={access_token}"
     headers = {
-    "Host": "activity.yonghuivip.com",
-    "Connection": "keep-alive",
-    "Content-Length": "87",
-    "X-YH-Biz-Params": "xdotdy=--&gib=--,0(-$,&gvo=+$0_+)*,+",
-    "Accept": "application/json",
-    "X-YH-Context": "origin=h5&morse=1",
-    "User-Agent": "Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36YhStore/9.12.0.12 cn.yonghui.hyd/2022952001 (client/phone; Android 31; realme/RMX3562)",
-    "Content-Type": "application/json",
-    "Origin": "https://m.yonghuivip.com",
-    "X-Requested-With": "cn.yonghui.hyd",
-    "Sec-Fetch-Site": "same-site",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-    "Referer": "https://m.yonghuivip.com/",
-    "Accept-Encoding": "gzip, deflate",
-    "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+        "Host": "activity.yonghuivip.com",
+        "Connection": "keep-alive",
+        "Content-Length": "87",
+        "X-YH-Biz-Params": "xdotdy=--&gib=--,0(-$,&gvo=+$0_+)*,+",
+        "Accept": "application/json",
+        "X-YH-Context": "origin=h5&morse=1",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 12; RMX3562 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36YhStore/9.12.0.12 cn.yonghui.hyd/2022952001 (client/phone; Android 31; realme/RMX3562)",
+        "Content-Type": "application/json",
+        "Origin": "https://m.yonghuivip.com",
+        "X-Requested-With": "cn.yonghui.hyd",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+        "Referer": "https://m.yonghuivip.com/",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
     }
     data = {
-    "activityCode": "HXNC-QG",
-    "shopId": "",
-    "channel": "",
-    "inviteTicket": "",
-    "inviteShopId": ""
+        "activityCode": "HXNC-QG",
+        "shopId": "",
+        "channel": "",
+        "inviteTicket": "",
+        "inviteShopId": ""
     }
     response = requests.post(url, headers=headers, json=data)
     response_data = response.json()
-    ladder = response_data["data"]["ladderText"]
-    print(f"浇水结果:{ladder}")
+    code = response_data["code"]
+    message = response_data["message"]
+    if code == 0:
+        ladder_text = response_data["data"]["ladderText"]
+        print(f"浇水结果: {ladder_text}")
+    else:
+        print(message)
+        return
+
 def main():
     tokens_str = os.environ.get('yhsh')
     if not tokens_str:
@@ -113,9 +121,13 @@ def main():
         device_id, access_token = pair.split('&')
         member(device_id, access_token)
         flow(device_id, access_token)
+        code = 0  
         for _ in range(3):
-            watering(device_id, access_token)
+            code = watering(device_id, access_token, code)  
             time.sleep(5)
+            if code != 0:
+                break
+
 if __name__ == "__main__":
     print(">>>>>开始执行所有任务<<<<<")
     main()
