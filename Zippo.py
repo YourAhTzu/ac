@@ -14,7 +14,7 @@ def Control():
     if open_status == 0:
         print(data["Zippo"]["tz"])
         return False
-    print(data["Zippo"]["edition"])
+    print(f"当前版本1.0，最新版本{v}")
     return True
 def sign(authorization):
     url = 'https://wx-center.zippo.com.cn/api/daily-signin'
