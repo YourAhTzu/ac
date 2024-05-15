@@ -1,5 +1,6 @@
 '''
 new Env('视客集APP')
+入口:https://app.cqskj.com/h5/#/pages/public/register?code=JGEJOU
 cron: 0 9 * * *
 格式:Authorization&macid&提现金额&致富宝名字&致富宝账号&pushplus公众号token 有bug前往QQ群问
 '''
