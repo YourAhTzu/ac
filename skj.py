@@ -1,5 +1,6 @@
 '''
-new Env('视客集APP');
+new Env('视客集APP')
+cron: 0 9 * * *
 格式:Authorization&macid&提现金额&致富宝名字&致富宝账号&pushplus公众号token 有bug前往QQ群问
 '''
 import bz2, base64
