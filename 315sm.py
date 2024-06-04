@@ -1,7 +1,8 @@
 '''
 new Env('315监控');
 没啥卵用就是发一些零撸的东西
-'''import requests
+'''
+import requests
 import re
 import sys
 def load_send():
