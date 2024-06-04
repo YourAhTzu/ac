@@ -5,6 +5,7 @@ new Env('315监控');
 import requests
 import re
 import sys
+from os import path
 def load_send():
     global send
     cur_path = path.abspath(path.dirname(__file__))
