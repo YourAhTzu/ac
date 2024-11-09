@@ -1,5 +1,5 @@
 '''
-本脚是API所写请勿频繁调用谢谢
+本脚本是API所写请勿频繁调用谢谢
 PS:API百度搜索的所有侵权请联系@sylm1删除
 '''
 import requests
@@ -17,7 +17,7 @@ class AC:
         }
     def Brushstep(self):
         if BS:
-            step = random.randint(self.MinStep, self.MaxStep)  数
+            step = random.randint(self.MinStep, self.MaxStep)  
         else:
             step = self.MinStep
         url = f"https://api.yyink.cn/api/mi?user={self.Account}&password={self.Password}&step={step}"
